@@ -1,0 +1,225 @@
+plugins{
+	id 'java'
+	id 'java-library'
+	id 'jacoco-report-aggregation'
+	id 'eclipse'
+	id 'application'
+	id 'base'
+}
+
+
+/*
+ * define global parameters here, e.g. versions numbers of tools which need to be consistent for all subprojects
+ * they are all accesible via project.parametername e.g. project.analyzerJavaVersion to get the used java version for the analyzer
+ */
+ext{
+	testcaseGeneratorJavaVersion = "21"
+	guiceVersion = "7.0.0"
+	junitVersion = "5.10.2"
+	mockitoVersion = "5.10.0"
+	jacocoVersion = "0.8.11"
+	commonsCliVersion = "1.6.0"
+}
+
+jacoco{
+	toolVersion = project.jacocoVersion
+}
+
+
+java {
+	sourceCompatibility = project.testcaseGeneratorJavaVersion
+	targetCompatibility = project.testcaseGeneratorJavaVersion
+    toolchain {
+    	languageVersion.set(JavaLanguageVersion.of(project.testcaseGeneratorJavaVersion))
+    }
+}
+
+
+version = new Date().format("yyyyMMdd")
+
+def descriptions = [
+	'opendse-testcase-generator' : 'The testcase generator module for opendse'
+	
+]
+
+allprojects {
+	group = 'bachelorarbeit'
+
+	repositories {
+		mavenCentral()
+		mavenLocal()
+		maven {
+			name "jitpack"
+			url 'https://jitpack.io' }
+	}
+}
+
+subprojects {
+	apply plugin: 'java'
+	apply plugin: 'java-library'
+	apply plugin: 'eclipse'
+	apply plugin: 'jacoco'
+
+	version = parent.version
+
+
+	task sourcesJar(type: Jar, dependsOn:classes) {
+		from sourceSets.main.allSource
+		archiveClassifier.set('sources')
+	}
+
+	task javadocJar(type: Jar, dependsOn:javadoc) {
+		from javadoc.destinationDir
+		archiveClassifier.set('javadoc')
+	}
+
+	java {
+		sourceCompatibility = project.testcaseGeneratorJavaVersion
+		targetCompatibility = project.testcaseGeneratorJavaVersion
+    	toolchain {
+    		languageVersion.set(JavaLanguageVersion.of(project.testcaseGeneratorJavaVersion))
+    	}
+	}
+
+	test {
+	 	// Enable JUnit 5 (Gradle 4.6+).
+   		useJUnitPlatform()
+   		// Always run tests, even when nothing changed.
+   	 	dependsOn 'cleanTest'
+    	// Show test results.
+    	testLogging {
+    		 events "passed", "skipped", "failed"
+		}
+	}
+ 	
+
+	jacoco {
+		toolVersion = project.jacocoVersion
+	}
+
+	jacocoTestReport {
+		getAdditionalSourceDirs().setFrom(sourceSets.main.allSource.srcDirs)
+		getSourceDirectories().setFrom(sourceSets.main.allSource.srcDirs)
+		getClassDirectories().setFrom(sourceSets.main.output)
+		reports {
+			html.required = true
+			csv.required = true
+			xml.required = true
+		}
+	}
+
+}
+
+/* for now ignore all javadoc errors in case of Java 8 */
+if (JavaVersion.current().isJava8Compatible()) {
+	allprojects {
+		tasks.withType(Javadoc) {
+			options.addStringOption('Xdoclint:none', '-quiet')
+		}
+	}
+}
+
+
+ext {
+	dateISO = new Date().format("yyyy-MM-dd")
+}
+
+
+mainClassName = 'org.opendse.testcaseGenerator.Generator'
+
+task fatjar(dependsOn: subprojects.jar, type: Jar) {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+	destinationDirectory = new File(project.buildDir, 'fatjar')
+	from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it)
+		} }
+	manifest {
+		attributes 'Main-Class': mainClassName
+	}
+	archiveBaseName = 'OpenDSETestcaseGenerator'
+}
+
+dependencies {	
+	implementation project(':opendse-testcase-generator')
+}
+
+jar {
+	manifest {
+		attributes 'Main-Class': mainClassName
+	}
+}
+
+task alldocs(type: Javadoc) {
+	title = "OpenDSE Testcase Generator $version Project API Documentation"
+	destinationDir = new File(project.buildDir, 'docs/javadoc')
+
+	
+	options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PUBLIC
+	options.links 'https://docs.oracle.com/en/java/javase/12/docs/api/','http://google.github.io/guice/api-docs/4.1/javadoc/'
+
+	subprojects.each {subproject ->
+		source subproject.sourceSets.main.java
+	}
+
+	subprojects.each { subproject ->
+		if( classpath ) {
+			classpath += subproject.sourceSets.main.output + subproject.sourceSets.main.compileClasspath
+		} else {
+			classpath = subproject.sourceSets.main.output + subproject.sourceSets.main.compileClasspath
+		}
+	}
+}
+
+import org.apache.tools.ant.filters.ReplaceTokens
+
+task copyWebsite(type: Copy, dependsOn: getTasksByName('copyWebsite', true)){
+	from('src/main/website/') {
+		include '**/*.html'
+		filter(ReplaceTokens, tokens: [version : project.version, date : project.dateISO])
+	}
+	from('src/main/website/') {
+		exclude '**/*.html'
+	}
+	subprojects.each { subproject ->
+		from new File(subproject.buildDir, 'website')
+	}
+	into 'build/website/'
+}
+
+task copyJavadoc(type: Copy, dependsOn: alldocs){
+	from new File(project.buildDir, 'docs/javadoc')
+	into 'build/website/javadoc/'+version
+}
+
+task website(dependsOn: [copyWebsite, copyJavadoc]) {}
+
+
+task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
+	dependsOn = subprojects.test
+	getAdditionalSourceDirs().setFrom(subprojects.sourceSets.main.allSource.srcDirs)
+	getSourceDirectories().setFrom(subprojects.sourceSets.main.allSource.srcDirs)
+	getClassDirectories().setFrom(subprojects.sourceSets.main.output)
+	executionData.from = files(subprojects.jacocoTestReport.executionData)
+	reports {
+		xml.required = true
+		xml.outputLocation = file("${buildDir}/reports/jacoco/rootReport.xml")
+		html.required = true
+		html.outputLocation = file("${buildDir}/reports/jacoco")
+		csv.required = true
+		csv.outputLocation = file("${buildDir}/reports/jacoco/rootReport.csv")
+	}
+	onlyIf = {
+		true
+	}
+	afterEvaluate {
+		getClassDirectories().setFrom(classDirectories.files.collect {
+			fileTree(dir: it, exclude: [
+				'ptolemy/**',
+				'org/opt4j/tutorial/**',
+				'org/opt4j/viewer/**',
+				'org/opt4j/core/config/visualization/**'
+			])
+		})
+	}
+}
+
+
