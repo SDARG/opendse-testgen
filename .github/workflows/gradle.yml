@@ -26,13 +26,3 @@ jobs:
       run: ./gradlew build
     - name: Generate the test report
       run: ./gradlew jacocorootreport
-    - name: Run codacy-coverage-reporter
-      uses: codacy/codacy-coverage-reporter-action@master
-      with:
-        project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-        coverage-reports: ./build/reports/jacoco/rootReport.xml
-    - name: Run codacy-analysis-cli
-      uses: codacy/codacy-analysis-cli-action@master
-      with:
-        project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-        max-allowed-issues: 400
