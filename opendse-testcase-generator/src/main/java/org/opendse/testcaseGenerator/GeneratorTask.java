@@ -1,26 +1,10 @@
 package org.opendse.testcaseGenerator;
 
-import java.lang.reflect.Type;
-import java.util.Set;
-
-import org.opt4j.core.Genotype;
 import org.opt4j.core.config.Task;
-import org.opt4j.core.config.TaskStateListener;
-import org.opt4j.core.optimizer.Control;
-import org.opt4j.core.optimizer.ControlListener;
-import org.opt4j.core.optimizer.Optimizer;
-import org.opt4j.core.optimizer.OptimizerIterationListener;
-import org.opt4j.core.problem.Creator;
-import org.opt4j.core.problem.Decoder;
-import org.opt4j.core.problem.Evaluator;
-import org.opt4j.core.start.Opt4JTask;
-import org.opt4j.core.start.Parameters;
 
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.google.inject.Key;
-import com.google.inject.TypeLiteral;
 
 
 /**

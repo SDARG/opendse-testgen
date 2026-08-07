@@ -1,8 +1,7 @@
 package org.opendse.testcaseGenerator.modules;
 
-import org.opendse.testcaseGenerator.ApplicationBuilder;
-import org.opendse.testcaseGenerator.DefaultApplicationBuilder;
-import org.opendse.testcaseGenerator.StaticApplicationBuilder;
+import org.opendse.testcaseGenerator.application.ApplicationBuilder;
+import org.opendse.testcaseGenerator.application.StaticApplicationBuilder;
 import org.opt4j.core.config.annotations.Parent;
 
 /*

@@ -1,4 +1,4 @@
-package org.opendse.testcaseGenerator;
+package org.opendse.testcaseGenerator.mappings;
 
 import java.util.ArrayList;
 
@@ -28,25 +28,22 @@ import net.sf.opendse.model.Task;
  */
 public class DefaultMapper extends Mapper{
 	
-private static int mappingCounter = 1;
-	
 	//Attribute boundaries for all Attributes
-	private double minPower = 1.0;
-	private double maxPower = 5.0;
-	private double mindelay = 3.0;
-	private double maxdelay = 10.0;
-	private double minperiod = 100.0;
-	private double maxperiod = 100.0;
-	private double minReliability = 0.005;
-	private double maxReliability = 0.05;
-	
-	
-	//Connectivity percentages
-	private double sensorConnectivity = 1;
-	private double actuatorConnectivity = 1;
-	private double processorConnectivity = 1;
-	
-	Rand rand;
+	protected final double minPower;
+	protected final double maxPower;
+	protected final double mindelay;
+	protected final double maxdelay;
+	protected final double minperiod;
+	protected final double maxperiod;
+	protected final double minReliability;
+	protected final double maxReliability;
+	protected final int minCapacity;
+	protected final int maxCapacity;
+	protected final double sensorConnectivity;
+	protected final double actuatorConnectivity;
+	protected final double processorConnectivity;
+	protected final Rand rand;
+
 	
 	@Inject
 	public DefaultMapper(Rand rand,
@@ -60,7 +57,9 @@ private static int mappingCounter = 1;
 			@Constant(value = "minperiod", namespace = DefaultMapper.class) double minperiod,
 			@Constant(value = "maxperiod", namespace = DefaultMapper.class) double maxperiod,
 			@Constant(value = "minReliability", namespace = DefaultMapper.class) double minReliability,
-			@Constant(value = "maxReliability", namespace = DefaultMapper.class) double maxReliability) {
+			@Constant(value = "maxReliability", namespace = DefaultMapper.class) double maxReliability,
+			@Constant(value = "minCapacity", namespace = LimitedMapper.class) int minCapacity,
+			@Constant(value = "maxCapacity", namespace = LimitedMapper.class) int maxCapacity) {
 		super();
 		this.rand = rand;
 		this.sensorConnectivity = sensConn;
@@ -74,6 +73,8 @@ private static int mappingCounter = 1;
 		this.maxperiod = maxperiod;
 		this.minReliability = minReliability;
 		this.maxReliability = maxReliability;
+		this.minCapacity = minCapacity;
+		this.maxCapacity = maxCapacity;
 		
 	}
 	/**
@@ -101,12 +102,21 @@ private static int mappingCounter = 1;
 		Mappings<Task,Resource> mappings  = new Mappings<Task,Resource>();
 		//guarantees all tasks have at least one mapping first and then generates random mappings to Connectivity specifications
 		for(Task task:taskList) { 
+			
+			//check if safety critical, then at least two mappings needed
+			boolean safetyCritical = false;
+			if(task.getAttribute("safetyCritical") != null) {
+				safetyCritical = task.getAttribute("safetyCritical");
+			}
+			int mappingCounter = 0;
+			
 			if(task instanceof SensorTask) {
 				//generates one mapping for the task
 				Resource sensor = sensors.get(rand.nextInt(sensors.size()));
 				Mapping<Task,Resource> map = new Mapping<Task,Resource>("m"+usemappingCounter(),task,sensor);
 				setAttributes(map);
 				mappings.add(map);
+				mappingCounter++;
 				//randomly sets the rest
 				for ( Resource resource: sensors)
 				{
@@ -115,7 +125,18 @@ private static int mappingCounter = 1;
 					Mapping<Task,Resource> mapping = new Mapping<Task,Resource>("m"+usemappingCounter(),task,resource);
 					setAttributes(mapping);
 					mappings.add(mapping);
+					mappingCounter++;
 					}
+				}
+				//if safety critical and only one mapping then add a second one to random resource
+				if(safetyCritical && mappingCounter == 1) {
+					Resource target = sensors.get(rand.nextInt(sensors.size()));
+					while(target == sensor) {
+						target = sensors.get(rand.nextInt(sensors.size()));
+					}
+					Mapping<Task,Resource> mapping = new Mapping<Task,Resource>("m"+usemappingCounter(),task,target);
+					setAttributes(mapping);
+					mappings.add(mapping);
 				}
 			}
 			if(task instanceof ActuatorTask) {
@@ -124,6 +145,7 @@ private static int mappingCounter = 1;
 				Mapping<Task,Resource> map = new Mapping<Task,Resource>("m"+usemappingCounter(),task,actuator);
 				setAttributes(map);
 				mappings.add(map);
+				mappingCounter++;
 				//randomly sets the rest
 				for ( Resource resource: actuators)
 				{
@@ -132,7 +154,18 @@ private static int mappingCounter = 1;
 					Mapping<Task,Resource> mapping = new Mapping<Task,Resource>("m"+usemappingCounter(),task,resource);
 					setAttributes(mapping);
 					mappings.add(mapping);
+					mappingCounter++;
 					}
+				}
+				//if safety critical and only one mapping then add a second one to random resource
+				if(safetyCritical && mappingCounter == 1) {
+					Resource target = actuators.get(rand.nextInt(actuators.size()));
+					while(target == actuator) {
+						target = actuators.get(rand.nextInt(actuators.size()));
+					}
+					Mapping<Task,Resource> mapping = new Mapping<Task,Resource>("m"+usemappingCounter(),task,target);
+					setAttributes(mapping);
+					mappings.add(mapping);
 				}
 			}
 			if(task instanceof CpuTask) {
@@ -151,22 +184,20 @@ private static int mappingCounter = 1;
 					mappings.add(mapping);
 					}
 				}
+				//if safety critical and only one mapping then add a second one to random resource
+				if(safetyCritical && mappingCounter == 1) {
+					Resource target = cpus.get(rand.nextInt(cpus.size()));
+					while(target == cpu) {
+						target = cpus.get(rand.nextInt(cpus.size()));
+					}
+					Mapping<Task,Resource> mapping = new Mapping<Task,Resource>("m"+usemappingCounter(),task,target);
+					setAttributes(mapping);
+					mappings.add(mapping);
+				}
 			}
-			
-			
-			
-			
 			
 		}		
 		return mappings;
-	}
-	public static int usemappingCounter() {
-		mappingCounter++;
-		return mappingCounter-1;	
-	}
-	
-	public static void resetCounters() {
-		mappingCounter = 1;
 	}
 	
 	
@@ -196,6 +227,11 @@ private static int mappingCounter = 1;
 			mapping.setAttribute("reliability", maxReliability);
 		}else {
 			mapping.setAttribute("reliability", rand.nextDouble((maxReliability-minReliability))+minReliability);
-		}		
+		}
+		if(maxCapacity == minCapacity) {
+			mapping.setAttribute("capacity", maxCapacity);
+		}else {
+			mapping.setAttribute("capacity", (int)(rand.nextInt((maxCapacity-minCapacity))+minCapacity));
+		}
 	}
 }

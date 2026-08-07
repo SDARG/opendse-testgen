@@ -32,13 +32,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.JButton;
-import javax.swing.JToolBar;
 
 import org.opt4j.core.config.ExecutionEnvironment;
 import org.opt4j.core.config.Icons;
 import org.opt4j.core.config.ModuleSaver;
-import org.opt4j.core.config.visualization.*;
+import org.opt4j.core.config.visualization.FileOperations;
 import org.opt4j.core.config.visualization.FileOperations.FileOperationsListener;
+import org.opt4j.core.config.visualization.SelectedModules;
+import org.opt4j.core.config.visualization.Startupable;
+import org.opt4j.core.config.visualization.ToolBar;
 
 import com.google.inject.Inject;
 import com.google.inject.Module;

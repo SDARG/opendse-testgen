@@ -35,6 +35,11 @@ public class SpecBuilderModule extends GeneratorModule {
 	@Constant(namespace = TestcaseGenerator.class, value = "custom")
 	public boolean customName = false;
 	
+	@Required(property = "customName", elements = { "true" })
+	@Order(4)
+	@Constant(namespace = TestcaseGenerator.class, value = "customName")
+	public String customFileName = "customName";
+	
 	public boolean isCustomName() {
 		return customName;
 	}
@@ -53,17 +58,6 @@ public class SpecBuilderModule extends GeneratorModule {
 	public void setCustomFileName(String customFileName) {
 		this.customFileName = customFileName;
 	}
-
-
-
-
-
-
-
-	@Required(property = "customName", elements = { "true" })
-	@Order(4)
-	@Constant(namespace = TestcaseGenerator.class, value = "customName")
-	public String customFileName = "customName";
 		
 	public boolean isShowSpecs() {
 		return showSpecs;
@@ -93,22 +87,9 @@ public class SpecBuilderModule extends GeneratorModule {
 	public void setNumberOfGeneratedSpecs(@Named("numberSpecs") int numberOfGeneratedSpecs) {
 		this.numberOfGeneratedSpecs = numberOfGeneratedSpecs;
 	}
-
-
-		
-	
-	
-	
 	
 	@Override
 	protected void config() {
-		
-		
 		bind(TestcaseGenerator.class);
-					
-		
-		
-		
-		}
-
+	}
 }

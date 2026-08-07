@@ -2,12 +2,8 @@ package org.opendse.testcaseGenerator.modelextension;
 
 import net.sf.opendse.model.Element;
 
-/**
- * The Bus is a class to model a simple variation of a  CommunicationResource 
- */
-public class Bus extends CommunicationResource{
+public class Switch extends CommunicationResource {
 
-	
 	private static double minPower = 10.0;
 	private static double maxPower = 20.0;
 	private static double minArea = 10.0;
@@ -17,29 +13,32 @@ public class Bus extends CommunicationResource{
 	private static double minThroughput = 5;
 	private static double maxThroughput = 10;
 	
-	public  Bus(String id) {
+	public Switch(String id) {
 		super(id);
-		
+	
 	}
-	public Bus(Element parent) {
+	public Switch(Element parent) {
 		super(parent);
 		
 	}
-
+	
 	public void setAttributes(){
 		this.setAttribute("power", rand.nextInt((int)(maxPower-minPower))+minPower);
 		this.setAttribute("area", rand.nextInt((int)(maxArea-minArea))+minArea);
 		this.setAttribute("reliability", (rand.nextDouble() * (maxReliability - minReliability)) + minReliability);
 		this.setAttribute("throughput", rand.nextInt((int)(maxThroughput-minThroughput))+minThroughput);
 	}
+	
 	public static void setAttributeBoundaries(double minPower, double maxPower,double minArea,double maxArea,double minReliability,double maxReliability, double minThroughput, double maxThroughput ) {
-		Bus.minPower = minPower;
-		Bus.maxPower = maxPower;
-		Bus.minArea = minArea;
-		Bus.maxArea = maxArea;
-		Bus.minReliability = minReliability;
-		Bus.maxReliability = maxReliability;
-		Bus.minThroughput = minThroughput;
-		Bus.maxThroughput = maxThroughput;
+		Switch.minPower = minPower;
+		Switch.maxPower = maxPower;
+		Switch.minArea = minArea;
+		Switch.maxArea = maxArea;
+		Switch.minReliability = minReliability;
+		Switch.maxReliability = maxReliability;
+		Switch.minThroughput = minThroughput;
+		Switch.maxThroughput = maxThroughput;
 	}
+
+	
 }

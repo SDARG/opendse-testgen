@@ -1,10 +1,9 @@
-package org.opendse.testcaseGenerator.architecture.implementation;
+package org.opendse.testcaseGenerator.architecture;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-import org.opendse.testcaseGenerator.architecture.ArchitectureBuilder;
-import org.opendse.testcaseGenerator.architecture.implementation.TileBuilder.TileType;
+import org.opendse.testcaseGenerator.architecture.TileBuilder.TileType;
 import org.opendse.testcaseGenerator.modelextension.CommunicationResource;
 import org.opendse.testcaseGenerator.modelextension.NoCRouter;
 import org.opt4j.core.common.random.Rand;
@@ -22,23 +21,28 @@ import net.sf.opendse.model.Resource;
  */
 public class NoCBuilder extends ArchitectureBuilder{
 
-	private int xsize;
-	private int ysize;
-	Rand rand;
+	protected final int xsize;
+	protected final int ysize;
+	protected final Rand rand;
 	
 	@Inject
 	public NoCBuilder(
 			@Constant(value = "xsize", namespace = NoCBuilder.class) int xsize,
 			@Constant(value = "ysize", namespace = NoCBuilder.class) int ysize,
 			Rand rand) {
-		
-		this.xsize = xsize;
-		this.ysize = ysize;
+		if(xsize < 2) {
+			this.xsize = 2;
+		}
+		else {
+			this.xsize = xsize;
+		}
+		if(ysize < 2) {
+			this.ysize = 2;
+		}
+		else {
+			this.ysize = ysize;
+		}
 		this.rand = rand;
-		
-		//guarantees a minimum size
-		if(ysize < 2) this.ysize = 2;
-		if(xsize < 2) this.xsize = 2;
 	}
 	
 	
@@ -47,7 +51,7 @@ public class NoCBuilder extends ArchitectureBuilder{
 	 * Builds the NoCRouter Structure with sizes according to xsize and ysize
 	 */
 @Override
-	public void build() {
+	public Architecture<Resource, Link> build() {
 		/*
 		 * reset counters for the architecture
 		 */
@@ -104,11 +108,7 @@ public class NoCBuilder extends ArchitectureBuilder{
 			}
 		}
 		fillTiles();
-
-
-		
-		
-		
+		return architecture;
 	}
 	/*
 	 * Uses a TileBuilder to attach a substructure with FunctionalResources to each NoCRouter

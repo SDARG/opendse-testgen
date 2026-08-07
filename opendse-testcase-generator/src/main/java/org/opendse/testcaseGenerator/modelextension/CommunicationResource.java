@@ -17,6 +17,7 @@ public abstract class CommunicationResource extends Resource{
 		super(parent);
 				
 	}
+
 	public CommunicationResource(String id) {
 		super(id);
 	}

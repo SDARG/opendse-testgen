@@ -1,15 +1,12 @@
 package org.opendse.testcaseGenerator.architecture;
 
-import java.util.ArrayList;
-
-import org.opendse.testcaseGenerator.modules.ArchitectureModule;
-
 import net.sf.opendse.model.Architecture;
 import net.sf.opendse.model.Link;
 import net.sf.opendse.model.Resource;
-	/**
-	 * Abstract Class for generation of a Architecture
-	 */
+
+/**
+ * Abstract Class for generation of a Architecture
+ */
 public abstract class ArchitectureBuilder{
 
 	
@@ -27,15 +24,10 @@ public abstract class ArchitectureBuilder{
 	private static int sensorCounter = 1;
 	private static int actuatorCounter = 1;
 	private static int busCounter = 1;
+	private static int switchCounter = 1;
 	
 	
-	
-	public abstract void build();
-	
-	public Architecture<Resource,Link> getArchitecture(){
-		return this.architecture;
-	}
-	
+	public abstract Architecture<Resource,Link> build();	
 	
 	
 	public static void resetCounters() {
@@ -48,6 +40,7 @@ public abstract class ArchitectureBuilder{
 		ArchitectureBuilder.sensorCounter = 1;
 		ArchitectureBuilder.actuatorCounter = 1;
 		ArchitectureBuilder.busCounter = 1;
+		ArchitectureBuilder.switchCounter = 1;
 	}
 
 	
@@ -103,6 +96,12 @@ public abstract class ArchitectureBuilder{
 		
 	}
 	
+	protected static int useSwitchCounter() {
+		switchCounter++;
+		return switchCounter-1;
+		
+	}
+	
 	public static int getCpuCounter() {
 		return cpuCounter;
 	}
@@ -113,6 +112,10 @@ public abstract class ArchitectureBuilder{
 	
 	public static int getSensorCounter() {
 		return sensorCounter;
+	}
+	
+	public static int getSwitchCounter() {
+		return switchCounter;
 	}
 	
 

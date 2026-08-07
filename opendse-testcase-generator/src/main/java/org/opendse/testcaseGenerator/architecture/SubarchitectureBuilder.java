@@ -1,10 +1,9 @@
-package org.opendse.testcaseGenerator.architecture.implementation;
+package org.opendse.testcaseGenerator.architecture;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-import org.opendse.testcaseGenerator.architecture.ArchitectureBuilder;
-import org.opendse.testcaseGenerator.architecture.implementation.TileBuilder.TileType;
+import org.opendse.testcaseGenerator.architecture.TileBuilder.TileType;
 import org.opendse.testcaseGenerator.modelextension.Actuator;
 import org.opendse.testcaseGenerator.modelextension.CommInterface;
 import org.opendse.testcaseGenerator.modelextension.Cpu;
@@ -19,12 +18,12 @@ import net.sf.opendse.model.Task;
 /*
  * The SubarchitectureBuilder creates and attaches a substructure with FunctionalResources to a given Resource
  */
-public class SubarchitectureBuilder  extends ArchitectureBuilder{
+public class SubarchitectureBuilder extends ArchitectureBuilder{
 
 	
-	ArrayList<Resource> currentBuslist;
-	Rand rand;
-	SubarchitectureType currentType;
+	protected ArrayList<Resource> currentBuslist;
+	protected final Rand rand;
+	protected SubarchitectureType currentType;
 	public  enum SubarchitectureType{
 		CPU,
 		SENSOR,
@@ -41,20 +40,22 @@ public class SubarchitectureBuilder  extends ArchitectureBuilder{
 	/*
 	 * Builds a Subarchitecture with the currently active Type connected to the Resources in currentBuslist
 	 */
-	@Override
-	public void build() {
-			switch(currentType) {
-			case CPU: buildCpu();
-				break;
-			case SENSOR: buildSensors();
-				break;
-			case IO: buildIO();
-				break;
-			default: buildCpu();
-				break;
-			
+	public Architecture<Resource, Link> build() {
+		switch(currentType) {
+		case CPU: 
+			buildCpu();
+			break;
+		case SENSOR: 
+			buildSensors();
+			break;
+		case IO: 
+			buildIO();
+			break;
+		default: 
+			buildCpu();
+			break;
 		}
-		
+		return architecture;	
 	}
 	/*
 	 *  Builds a Subarchitecture with up to 8 Cpus connected to all Resource in currentBuslist with a CommInterface

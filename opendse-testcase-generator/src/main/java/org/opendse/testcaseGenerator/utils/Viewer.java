@@ -9,8 +9,6 @@ import net.sf.opendse.visualization.SpecificationViewer;
 public class Viewer {
 
 	public static void main(String[] args) {
-	
-		
 		String[] specs = {"resources/Specification1","resources/Specification2"};
 		SpecificationReader reader = new SpecificationReader();
 		ArrayList<Specification> specifications = new ArrayList<Specification>();

@@ -5,7 +5,6 @@ import org.opt4j.core.start.Constant;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.google.inject.name.Named;
 
 import net.sf.opendse.io.SpecificationReader;
 import net.sf.opendse.io.SpecificationWriter;

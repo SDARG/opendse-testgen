@@ -2,7 +2,6 @@ package org.opendse.testcaseGenerator.visualization;
 
 import org.opendse.testcaseGenerator.GeneratorTask;
 import org.opt4j.core.config.Starter;
-import org.opt4j.core.start.Opt4JTask;
 
 /*
  * Starter that uses GeneratorTask

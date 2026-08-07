@@ -1,10 +1,10 @@
 package org.opendse.testcaseGenerator.modules;
 
-import org.opendse.testcaseGenerator.DefaultApplicationBuilder;
 import org.opendse.testcaseGenerator.TestcaseGenerator;
 import org.opendse.testcaseGenerator.architecture.ArchitectureBuilder;
-import org.opendse.testcaseGenerator.architecture.implementation.GatewayBuilder;
-import org.opendse.testcaseGenerator.architecture.implementation.NoCBuilder;
+import org.opendse.testcaseGenerator.architecture.BackboneBuilder;
+import org.opendse.testcaseGenerator.architecture.GatewayBuilder;
+import org.opendse.testcaseGenerator.architecture.NoCBuilder;
 import org.opendse.testcaseGenerator.modelextension.Actuator;
 import org.opendse.testcaseGenerator.modelextension.Bus;
 import org.opendse.testcaseGenerator.modelextension.CANBus;
@@ -14,23 +14,21 @@ import org.opendse.testcaseGenerator.modelextension.EthernetBus;
 import org.opendse.testcaseGenerator.modelextension.Gateway;
 import org.opendse.testcaseGenerator.modelextension.NoCRouter;
 import org.opendse.testcaseGenerator.modelextension.Sensor;
-import org.opt4j.core.config.annotations.Category;
+import org.opendse.testcaseGenerator.modelextension.Switch;
 import org.opt4j.core.config.annotations.Info;
 import org.opt4j.core.config.annotations.Order;
 import org.opt4j.core.config.annotations.Parent;
 import org.opt4j.core.config.annotations.Required;
 import org.opt4j.core.start.Constant;
 
-import com.google.inject.name.Named;
-
-/*
+/**
  * Module to select ArchitectureType and changing architecture generation settings
  */
 @Parent(SpecBuilderModule.class)
 public class ArchitectureModule extends GeneratorModule{
 
 	public enum ArchitectureType {
-		Gateway,NoC
+		Gateway,NoC,Backbone
 	}
 	
 	@Info("The basic type of the architecture.")
@@ -51,59 +49,139 @@ public class ArchitectureModule extends GeneratorModule{
 	public int numberOfBuses = 2;
 	
 	@Required(property = "type", elements = { "Gateway" })
+	@Order(4)
 	@Info("How many resources should each bus have at maximum.")
 	@Constant(value = "resourceNumber", namespace = GatewayBuilder.class)
 	public int maxNumberofResources = 2;
 	
+	@Required(property = "type", elements = { "Backbone" })
+	@Order(5)
+	@Info("How many switches are generated.")
+	@Constant(value = "switchNumber", namespace = BackboneBuilder.class)
+	public int switchNumber = 2;
+	
+	@Required(property = "type", elements = { "Backbone" })
+	@Order(6)
+	@Info("How many resources are generated.")
+	@Constant(value = "resourceNumber", namespace = BackboneBuilder.class)
+	public int resourceNumber = 2;
+	
+	@Required(property = "type", elements = { "Backbone" })
+	@Order(7)
+	@Info("If processing resources are allowed to be connected to multiple switches.")
+	@Constant(value = "multipleConnectionsAllowed", namespace = BackboneBuilder.class)
+	public boolean multipleConnectionsAllowed = true;
+	
+	@Required(property = "multipleConnectionsAllowed", elements = { "true" })
+	@Order(8)
+	@Info("COnnections to how many switches are allowed.")
+	@Constant(value = "numberOfConnections", namespace = BackboneBuilder.class)
+	public int numberOfConnections = 2;
 	
 	@Required(property = "type", elements = { "NoC" })
-	@Order(2)
+	@Order(9)
 	@Info("The x size of the NoC. Minimum 2.")
 	@Constant(value = "xsize", namespace = NoCBuilder.class)
 	public int xsize = 2;
 	
 	@Required(property = "type", elements = { "NoC" })
-	@Order(3)
+	@Order(10)
 	@Info("The y size of the NoC. Minimum 2.")
 	@Constant(value = "ysize", namespace = NoCBuilder.class)
 	public int ysize = 2;
 	
-	@Order(4)
+	@Order(11)
 	@Info("Extended settings for parameter ranges of resources.")
 	public boolean configureResourceParameter = false;
 	
 	@Required(property = "configureResourceParameter", elements = { "true" })
-	@Order(5)
+	@Order(12)
 	private double minPower = 10.0;
 	
 	@Required(property = "configureResourceParameter", elements = { "true" })
-	@Order(6)
+	@Order(13)
 	private double maxPower = 20.0;
 	
 	@Required(property = "configureResourceParameter", elements = { "true" })
-	@Order(7)
+	@Order(14)
 	private double minArea = 10.0;
 	
 	@Required(property = "configureResourceParameter", elements = { "true" })
-	@Order(8)
+	@Order(15)
 	private double maxArea = 20.0;
 	
 	@Required(property = "configureResourceParameter", elements = { "true" })
-	@Order(9)
+	@Order(16)
 	private double minFailureProbability = 0.005;
 	
 	@Required(property = "configureResourceParameter", elements = { "true" })
-	@Order(10)
+	@Order(17)
 	private double maxFailureProbability = 0.05;
 	
 	@Required(property = "configureResourceParameter", elements = { "true" })
-	@Order(11)
+	@Order(18)
 	private double minThroughput = 50;
 	
 	@Required(property = "configureResourceParameter", elements = { "true" })
-	@Order(12)
+	@Order(19)
 	private double maxThroughput = 100;
+	
+	@Required(property = "configureResourceParameter", elements = { "true" })
+	@Order(20)
+	private int minCapacity = 1;
+	
+	@Required(property = "configureResourceParameter", elements = { "true" })
+	@Order(21)
+	private int maxCapacity = 10;
 		
+	public int getSwitchNumber() {
+		return switchNumber;
+	}
+
+	public void setSwitchNumber(int switchNumber) {
+		this.switchNumber = switchNumber;
+	}
+
+	public int getResourceNumber() {
+		return resourceNumber;
+	}
+
+	public void setResourceNumber(int resourceNumber) {
+		this.resourceNumber = resourceNumber;
+	}
+
+	public boolean isMultipleConnectionsAllowed() {
+		return multipleConnectionsAllowed;
+	}
+
+	public void setMultipleConnectionsAllowed(boolean multipleConnectionsAllowed) {
+		this.multipleConnectionsAllowed = multipleConnectionsAllowed;
+	}
+
+	public int getNumberOfConnections() {
+		return numberOfConnections;
+	}
+
+	public void setNumberOfConnections(int numberOfConnections) {
+		this.numberOfConnections = numberOfConnections;
+	}
+
+	public int getMinCapacity() {
+		return minCapacity;
+	}
+
+	public void setMinCapacity(int minCapacity) {
+		this.minCapacity = minCapacity;
+	}
+
+	public int getMaxCapacity() {
+		return maxCapacity;
+	}
+
+	public void setMaxCapacity(int maxCapacity) {
+		this.maxCapacity = maxCapacity;
+	}
+
 	public double getMinPower() {
 		return minPower;
 	}
@@ -233,6 +311,9 @@ public class ArchitectureModule extends GeneratorModule{
 		case ArchitectureType.NoC:
 			bind(ArchitectureBuilder.class).to(NoCBuilder.class);
 			break;
+		case ArchitectureType.Backbone:
+			bind(ArchitectureBuilder.class).to(BackboneBuilder.class);
+			break;
 		default:
 			bind(ArchitectureBuilder.class).to(GatewayBuilder.class);
 		break;
@@ -249,6 +330,7 @@ public class ArchitectureModule extends GeneratorModule{
 		NoCRouter.setAttributeBoundaries(minPower, maxPower, minArea, maxArea, minFailureProbability, maxFailureProbability, minThroughput, maxThroughput);
 		Actuator.setAttributeBoundaries(minPower, maxPower, minArea, maxArea, minFailureProbability, maxFailureProbability);
 		Sensor.setAttributeBoundaries(minPower, maxPower, minArea, maxArea, minFailureProbability, maxFailureProbability);
-		Cpu.setAttributeBoundaries(minPower, maxPower, minArea, maxArea, minFailureProbability, maxFailureProbability);
+		Cpu.setAttributeBoundaries(minPower, maxPower, minArea, maxArea, minFailureProbability, maxFailureProbability,minCapacity,maxCapacity);
+		Switch.setAttributeBoundaries(minPower, maxPower, minArea, maxArea, minFailureProbability, maxFailureProbability, minThroughput, maxThroughput);
 	}
 }

@@ -14,7 +14,6 @@ import org.opt4j.core.common.random.RandomModule;
 import org.opt4j.core.config.ModuleAutoFinder;
 import org.opt4j.core.config.Starter;
 import org.opt4j.core.config.annotations.Ignore;
-import org.opt4j.core.start.Opt4JModule;
 
 import com.google.inject.Module;
 

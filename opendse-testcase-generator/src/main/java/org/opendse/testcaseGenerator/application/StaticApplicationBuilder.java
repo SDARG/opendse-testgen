@@ -1,4 +1,4 @@
-package org.opendse.testcaseGenerator;
+package org.opendse.testcaseGenerator.application;
 
 import org.opendse.testcaseGenerator.architecture.ArchitectureBuilder;
 import org.opendse.testcaseGenerator.modelextension.ActuatorTask;

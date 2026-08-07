@@ -1,10 +1,9 @@
-package org.opendse.testcaseGenerator.architecture.implementation;
+package org.opendse.testcaseGenerator.architecture;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-import org.opendse.testcaseGenerator.architecture.ArchitectureBuilder;
-import org.opendse.testcaseGenerator.architecture.implementation.SubarchitectureBuilder.SubarchitectureType;
+import org.opendse.testcaseGenerator.architecture.SubarchitectureBuilder.SubarchitectureType;
 import org.opendse.testcaseGenerator.modelextension.Bus;
 import org.opendse.testcaseGenerator.modelextension.CANBus;
 import org.opendse.testcaseGenerator.modelextension.EthernetBus;
@@ -26,11 +25,10 @@ import net.sf.opendse.model.Task;
  */
 public class GatewayBuilder  extends ArchitectureBuilder{
 
-	private boolean multibus;
-	private int busNumber;
-	private int resourceNumber;
-	
-	Rand rand;
+	protected final boolean multibus;
+	protected final int busNumber;
+	protected final int resourceNumber;
+	protected final Rand rand;
 	
 	
 	@Inject
@@ -50,7 +48,7 @@ public class GatewayBuilder  extends ArchitectureBuilder{
 	 * Creates a Gateway and connects it to the specified number of Buses, then creates up to a specified number of subarchitectures at these Buses
 	 */
 	@Override
-	public void build() {
+	public Architecture<Resource, Link> build() {
 		//reset counters for the architecture
 		this.architecture = new Architecture<Resource, Link>();
 		ArchitectureBuilder.resetCounters();
@@ -118,11 +116,7 @@ public class GatewayBuilder  extends ArchitectureBuilder{
 				builder.build();
 			}
 		}
+		return architecture;
 	}
-	
-	public void setMultibus(boolean multibus) {
-			this.multibus = multibus;
-	}
-
 
 }
