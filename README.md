@@ -5,7 +5,7 @@ _OpenDSE-TestGen_  is a testcase generator for the OpenDSE framework, written in
 It generates a specification graph consisting of an application graph, an architecture graph, and a set of mapping edges connecting both graphs.
 The specification is stored in the XML format defined by OpenDSE.
 
-##Features
+## Features
 The following architecture types are supported:
 *	Gateway
 *	NoC
@@ -19,8 +19,7 @@ The following application patterns are supported:
 OpenDSE-TestGen requires Java 21 (LTS) or higher.
 
 
-##Credits
-
+## Credits
 Brought to you by
 *   Alexander Reichle
 *   Lukas Pfeifer
