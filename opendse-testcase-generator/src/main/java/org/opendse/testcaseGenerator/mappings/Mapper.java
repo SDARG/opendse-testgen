@@ -14,7 +14,7 @@ import net.sf.opendse.model.Task;
 @ImplementedBy(DefaultMapper.class)
 public abstract class Mapper {
 
-	private static int mappingCounter = 1;
+	private static int mappingCounter = 0;
 	
 	@Inject
 	public Mapper() {
@@ -28,7 +28,7 @@ public abstract class Mapper {
 	}
 	
 	public static void resetCounters() {
-		mappingCounter = 1;
+		mappingCounter = 0;
 	}
 	
 }

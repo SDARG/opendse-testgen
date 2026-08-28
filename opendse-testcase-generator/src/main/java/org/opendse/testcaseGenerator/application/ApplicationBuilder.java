@@ -12,9 +12,9 @@ import net.sf.opendse.model.Task;
 public abstract class ApplicationBuilder {
 	
 	protected Application<Task,Dependency> application;
-	private static int taskCounter = 1;
-	private static int dependencyCounter = 1;
-	private static int commCounter = 1;
+	private static int taskCounter = 0;
+	private static int dependencyCounter = 0;
+	private static int commCounter = 0;
 	
 	public abstract Application<Task,Dependency> build();
 	
@@ -37,8 +37,8 @@ public abstract class ApplicationBuilder {
 	}
 	
 	public static void resetCounters() {
-		 taskCounter = 1;
-		 dependencyCounter = 1;
-		 commCounter = 1;
+		 taskCounter = 0;
+		 dependencyCounter = 0;
+		 commCounter = 0;
 	}
 }
