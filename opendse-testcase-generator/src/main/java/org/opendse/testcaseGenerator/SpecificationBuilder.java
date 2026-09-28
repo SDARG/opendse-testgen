@@ -1,26 +1,18 @@
 package org.opendse.testcaseGenerator;
 
-import java.util.ArrayList;
-
+import org.opendse.testcaseGenerator.application.ApplicationBuilder;
 import org.opendse.testcaseGenerator.architecture.ArchitectureBuilder;
-import org.opendse.testcaseGenerator.architecture.implementation.GatewayBuilder;
-import org.opendse.testcaseGenerator.architecture.implementation.NoCBuilder;
+import org.opendse.testcaseGenerator.mappings.Mapper;
 import org.opendse.testcaseGenerator.modelextension.CommunicationResource;
 import org.opendse.testcaseGenerator.modelextension.FunctionalResource;
-import org.opendse.testcaseGenerator.modules.ArchitectureModule.ArchitectureType;
-import org.opendse.testcaseGenerator.modules.SpecBuilderModule;
 import org.opt4j.core.common.random.Rand;
-import org.opt4j.core.common.random.RandomMersenneTwister;
 
-import com.google.inject.Guice;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 
 import net.sf.opendse.model.Application;
 import net.sf.opendse.model.Architecture;
 import net.sf.opendse.model.Dependency;
 import net.sf.opendse.model.Link;
-import net.sf.opendse.model.Mapping;
 import net.sf.opendse.model.Mappings;
 import net.sf.opendse.model.Resource;
 import net.sf.opendse.model.Specification;
@@ -31,9 +23,9 @@ import net.sf.opendse.model.Task;
  */
 public class SpecificationBuilder {
 
-	ApplicationBuilder aplBuilder;
-	ArchitectureBuilder arcBuilder;
-	Mapper mapper;
+	protected final ApplicationBuilder aplBuilder;
+	protected final ArchitectureBuilder arcBuilder;
+	protected final Mapper mapper;
 	
 	
 	@Inject
@@ -54,7 +46,7 @@ public class SpecificationBuilder {
 		 * Builds the architecture according to parameters
 		 */
 		arcBuilder.build();
-		Architecture<Resource, Link> architecture = arcBuilder.getArchitecture();
+		Architecture<Resource, Link> architecture = arcBuilder.build();
 		/*
 		 * Builds the application according to parameters
 		 */

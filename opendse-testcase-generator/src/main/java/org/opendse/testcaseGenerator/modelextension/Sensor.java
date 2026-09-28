@@ -1,13 +1,7 @@
 package org.opendse.testcaseGenerator.modelextension;
 
-import java.util.Random;
-
-import org.opt4j.core.common.random.Rand;
-
-import com.google.inject.Inject;
-
 import net.sf.opendse.model.Element;
-import net.sf.opendse.model.Resource;
+import net.sf.opendse.optimization.constraints.SpecificationCapacityConstraints;
 
 /**
  * The Sensor is a class to model a simple sensor resource 
@@ -35,6 +29,7 @@ public class Sensor extends FunctionalResource{
 		this.setAttribute("power", rand.nextInt((int)(maxPower-minPower))+minPower);
 		this.setAttribute("area", rand.nextInt((int)(maxArea-minArea))+minArea);
 		this.setAttribute("reliability", (rand.nextDouble() * (maxReliability - minReliability)) + minReliability);
+		this.setAttribute("capacity"+SpecificationCapacityConstraints.CAPACITY_MAX, 3);
 	}
 	
 	public static void setAttributeBoundaries(double minPower, double maxPower,double minArea,double maxArea,double minReliability,double maxReliability ) {

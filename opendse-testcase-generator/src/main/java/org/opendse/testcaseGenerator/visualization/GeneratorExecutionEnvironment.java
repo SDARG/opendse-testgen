@@ -1,7 +1,6 @@
 package org.opendse.testcaseGenerator.visualization;
 
 import java.util.ArrayList;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -14,7 +13,6 @@ import java.util.concurrent.Future;
 import org.opt4j.core.config.ExecutionEnvironment;
 import org.opt4j.core.config.Task;
 import org.opt4j.core.config.TaskListener;
-import org.opt4j.core.config.TaskStateListener;
 
 import com.google.inject.Inject;
 import com.google.inject.Module;

@@ -17,10 +17,10 @@ import org.opt4j.core.config.Icons;
 import org.opt4j.core.config.visualization.About;
 import org.opt4j.core.config.visualization.ApplicationFrame;
 import org.opt4j.core.config.visualization.ContentPanel;
+import org.opt4j.core.config.visualization.DefaultApplicationFrame;
 import org.opt4j.core.config.visualization.FileOperations;
 import org.opt4j.core.config.visualization.Menu;
 import org.opt4j.core.config.visualization.ToolBar;
-import org.opt4j.core.start.Opt4J;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

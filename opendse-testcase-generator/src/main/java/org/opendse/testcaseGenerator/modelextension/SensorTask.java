@@ -1,7 +1,6 @@
 package org.opendse.testcaseGenerator.modelextension;
 
 import net.sf.opendse.model.Element;
-import net.sf.opendse.model.Task;
 /**
  * The SensorTask is a class to model a simple sensor function 
  */

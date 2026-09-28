@@ -1,14 +1,11 @@
 package org.opendse.testcaseGenerator;
 
-import net.sf.opendse.io.SpecificationWriter;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.HeadlessException;
 import java.awt.RenderingHints;
 import java.awt.SplashScreen;
-
 
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -17,28 +14,14 @@ import org.opendse.testcaseGenerator.modules.SetupModule;
 import org.opendse.testcaseGenerator.visualization.GeneratorStarter;
 import org.opt4j.core.config.ModuleAutoFinder;
 import org.opt4j.core.config.ModuleAutoFinderListener;
-import org.opt4j.core.config.ModuleList;
-import org.opt4j.core.config.Starter;
-import org.opt4j.core.config.visualization.About;
 import org.opt4j.core.config.visualization.ApplicationFrame;
 import org.opt4j.core.config.visualization.Configurator;
 import org.opt4j.core.config.visualization.DelayTask;
-
-import org.opt4j.core.config.visualization.TasksPanel;
 import org.opt4j.core.start.Opt4J;
-import org.opt4j.core.start.Opt4JAbout;
-import org.opt4j.core.start.Opt4JStarter;
 
-import org.opt4j.core.start.Opt4JTasksPanel;
-
-
-import com.google.inject.Binder;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
-
-
-import net.sf.opendse.model.Task;
 
 /**
  * The {@link Generator} configuration GUI.

@@ -1,15 +1,12 @@
 package org.opendse.testcaseGenerator.architecture;
 
-import java.util.ArrayList;
-
-import org.opendse.testcaseGenerator.modules.ArchitectureModule;
-
 import net.sf.opendse.model.Architecture;
 import net.sf.opendse.model.Link;
 import net.sf.opendse.model.Resource;
-	/**
-	 * Abstract Class for generation of a Architecture
-	 */
+
+/**
+ * Abstract Class for generation of a Architecture
+ */
 public abstract class ArchitectureBuilder{
 
 	
@@ -18,36 +15,32 @@ public abstract class ArchitectureBuilder{
 	/*
 	 * the following counters are used to keep track of resource counts for procedurally generating identifier of resources
 	 */
-	private static int edgeCounter = 1;
-	private static int resourceCounter = 1;
-	private static int cInterfaceCounter = 1;
-	private static int cpuCounter = 1;
-	private static int ramCounter = 1;
-	private static int dataCounter = 1;
-	private static int sensorCounter = 1;
-	private static int actuatorCounter = 1;
-	private static int busCounter = 1;
+	private static int edgeCounter = 0;
+	private static int resourceCounter = 0;
+	private static int cInterfaceCounter = 0;
+	private static int cpuCounter = 0;
+	private static int ramCounter = 0;
+	private static int dataCounter = 0;
+	private static int sensorCounter = 0;
+	private static int actuatorCounter = 0;
+	private static int busCounter = 0;
+	private static int switchCounter = 0;
 	
 	
-	
-	public abstract void build();
-	
-	public Architecture<Resource,Link> getArchitecture(){
-		return this.architecture;
-	}
-	
+	public abstract Architecture<Resource,Link> build();	
 	
 	
 	public static void resetCounters() {
-		ArchitectureBuilder.edgeCounter = 1;
-		ArchitectureBuilder.resourceCounter = 1;
-		ArchitectureBuilder.cInterfaceCounter = 1;
-		ArchitectureBuilder.cpuCounter = 1;
-		ArchitectureBuilder.ramCounter = 1;
-		ArchitectureBuilder.dataCounter = 1;
-		ArchitectureBuilder.sensorCounter = 1;
-		ArchitectureBuilder.actuatorCounter = 1;
-		ArchitectureBuilder.busCounter = 1;
+		ArchitectureBuilder.edgeCounter = 0;
+		ArchitectureBuilder.resourceCounter = 0;
+		ArchitectureBuilder.cInterfaceCounter = 0;
+		ArchitectureBuilder.cpuCounter = 0;
+		ArchitectureBuilder.ramCounter = 0;
+		ArchitectureBuilder.dataCounter = 0;
+		ArchitectureBuilder.sensorCounter = 0;
+		ArchitectureBuilder.actuatorCounter = 0;
+		ArchitectureBuilder.busCounter = 0;
+		ArchitectureBuilder.switchCounter = 0;
 	}
 
 	
@@ -103,6 +96,12 @@ public abstract class ArchitectureBuilder{
 		
 	}
 	
+	protected static int useSwitchCounter() {
+		switchCounter++;
+		return switchCounter-1;
+		
+	}
+	
 	public static int getCpuCounter() {
 		return cpuCounter;
 	}
@@ -113,6 +112,10 @@ public abstract class ArchitectureBuilder{
 	
 	public static int getSensorCounter() {
 		return sensorCounter;
+	}
+	
+	public static int getSwitchCounter() {
+		return switchCounter;
 	}
 	
 

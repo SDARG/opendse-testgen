@@ -3,7 +3,6 @@ package org.opendse.testcaseGenerator.visualization;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
-import org.opt4j.core.config.ModuleList;
 import org.opt4j.core.config.ModuleRegister;
 
 import com.google.inject.Inject;

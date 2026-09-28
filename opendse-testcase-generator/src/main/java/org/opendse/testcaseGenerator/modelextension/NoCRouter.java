@@ -1,11 +1,5 @@
 package org.opendse.testcaseGenerator.modelextension;
-import java.util.Random;
 
-import org.opt4j.core.common.random.Rand;
-
-import com.google.inject.Inject;
-
-import net.sf.opendse.model.Architecture;
 import net.sf.opendse.model.Element;
 
 /**

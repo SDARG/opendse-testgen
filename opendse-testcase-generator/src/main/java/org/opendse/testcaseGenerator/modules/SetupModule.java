@@ -1,14 +1,10 @@
 package org.opendse.testcaseGenerator.modules;
 
-import org.opendse.testcaseGenerator.TestcaseGenerator;
 import org.opendse.testcaseGenerator.visualization.GeneratorApplicationFrame;
 import org.opendse.testcaseGenerator.visualization.GeneratorExecutionEnvironment;
-import org.opendse.testcaseGenerator.visualization.GeneratorModuleAutoFinder;
 import org.opendse.testcaseGenerator.visualization.GeneratorModuleRegister;
 import org.opendse.testcaseGenerator.visualization.GeneratorToolBar;
 import org.opt4j.core.config.ExecutionEnvironment;
-import org.opt4j.core.config.ModuleAutoFinder;
-import org.opt4j.core.config.ModuleList;
 import org.opt4j.core.config.ModuleRegister;
 import org.opt4j.core.config.visualization.ApplicationFrame;
 import org.opt4j.core.config.visualization.ToolBar;

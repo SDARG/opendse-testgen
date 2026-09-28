@@ -1,9 +1,8 @@
-package org.opendse.testcaseGenerator.architecture.implementation;
+package org.opendse.testcaseGenerator.architecture;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-import org.opendse.testcaseGenerator.architecture.ArchitectureBuilder;
 import org.opendse.testcaseGenerator.modelextension.CommInterface;
 import org.opendse.testcaseGenerator.modelextension.Cpu;
 import org.opt4j.core.common.random.Rand;
@@ -25,13 +24,11 @@ public class TileBuilder  extends ArchitectureBuilder{
 		CORE,
 		DATA
 	}
-	private TileType currentType;
-	public Resource connector;
+	protected TileType currentType;
+	protected Resource connector;
+	protected final Rand rand;
 	
-	Rand rand;
-	
-	public TileBuilder(TileType type,Architecture<Resource,Link> architecture,Resource connector, Rand rand)
-	{
+	public TileBuilder(TileType type,Architecture<Resource,Link> architecture,Resource connector, Rand rand){
 		currentType = type;
 		this.architecture = architecture;
 		this.connector = connector;
@@ -43,18 +40,22 @@ public class TileBuilder  extends ArchitectureBuilder{
 	 * Builds a Tile with the currently active Type to the connector
 	 */
 	@Override
-	public void build() {
+	public Architecture<Resource, Link> build() {
 		switch(currentType) {
-		case RAM: buildRAMTile();
+		case RAM: 
+			buildRAMTile();
 			break;
-		case CORE: buildCoreTile();
+		case CORE: 
+			buildCoreTile();
 			break;
-		case DATA: buildDATATile();
+		case DATA: 
+			buildDATATile();
 			break;
-		default: buildCoreTile();
+		default: 
+			buildCoreTile();
 			break;
-	
-		}		
+		}	
+		return architecture;
 	}
 	/*
 	 * currently not used by the NoCBuilder
