@@ -10,14 +10,14 @@ The specification is stored in the XML format defined by OpenDSE.
 
 The following architecture types are supported:
 
-*   Gateway
-*   NoC
-*   Backbone
+* Gateway
+* NoC
+* Backbone
 
 The following application patterns are supported:
 
-*   N parallel functions with a configurable width in their application graphs
-*   Mixed-Criticality application that contains safety-critical and non-critical functions
+* N parallel functions with a configurable width in their application graphs
+* Mixed-Criticality application that contains safety-critical and non-critical functions
 
 ## Java Versions
 
@@ -27,9 +27,9 @@ OpenDSE-TestGen requires Java 21 (LTS) or higher.
 
 Brought to you by
 
-*   Alexander Reichle
-*   Lukas Pfeifer
-*   Michael Glaß
+* Alexander Reichle
+* Lukas Pfeifer
+* Michael Glaß
 
 This project uses
 
