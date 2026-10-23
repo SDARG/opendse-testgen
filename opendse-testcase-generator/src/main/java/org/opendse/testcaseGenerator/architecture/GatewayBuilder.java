@@ -1,7 +1,7 @@
 package org.opendse.testcaseGenerator.architecture;
 
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.List;
 
 import org.opendse.testcaseGenerator.architecture.SubarchitectureBuilder.SubarchitectureType;
 import org.opendse.testcaseGenerator.modelextension.Bus;
@@ -9,17 +9,13 @@ import org.opendse.testcaseGenerator.modelextension.CANBus;
 import org.opendse.testcaseGenerator.modelextension.EthernetBus;
 import org.opendse.testcaseGenerator.modelextension.Gateway;
 import org.opt4j.core.common.random.Rand;
-import org.opt4j.core.common.random.RandomDefault;
-import org.opt4j.core.common.random.RandomMersenneTwister;
 import org.opt4j.core.start.Constant;
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 import net.sf.opendse.model.Architecture;
 import net.sf.opendse.model.Link;
 import net.sf.opendse.model.Resource;
-import net.sf.opendse.model.Task;
 /*
  * The GatewayBuilder is used to create a Gateway Structure  
  */
@@ -92,31 +88,38 @@ public class GatewayBuilder  extends ArchitectureBuilder{
 				buslist.add(bus);
 			}
 			
-			
-			//Uses the SubarchitectureBuilder to attach functional Resources to the Buses
-			builder.setBus(buslist);
-			for(int i = 0; i <= rand.nextInt(resourceNumber);i++) {
-				switch(rand.nextInt(SubarchitectureType.values().length+1)) {
-				case 0:
-					builder.setType(SubarchitectureType.CPU);
-					break;
-				case 1:
-					builder.setType(SubarchitectureType.CPU);
-					break;
-				case 2:
-					builder.setType(SubarchitectureType.IO);
-					break;
-				case 3:
-					builder.setType(SubarchitectureType.SENSOR);
-					break;
-				default:
-					builder.setType(SubarchitectureType.CPU);
-				break;
-				}
-				builder.build();
-			}
+			//build the subarchitecture and connect to the buses
+			buildSubarchitecture(builder, buslist);
 		}
 		return architecture;
+	}
+	
+	/*
+	 * builds the subarchitecture and connects it to the bus nodes
+	 */
+	private void buildSubarchitecture(SubarchitectureBuilder builder, List<Resource> buslist) {
+		//Uses the SubarchitectureBuilder to attach functional Resources to the Buses
+		builder.setBus(buslist);
+		for(int i = 0; i <= rand.nextInt(resourceNumber);i++) {
+			switch(rand.nextInt(SubarchitectureType.values().length+1)) {
+			case 0:
+				builder.setType(SubarchitectureType.CPU);
+				break;
+			case 1:
+				builder.setType(SubarchitectureType.CPU);
+				break;
+			case 2:
+				builder.setType(SubarchitectureType.IO);
+				break;
+			case 3:
+				builder.setType(SubarchitectureType.SENSOR);
+				break;
+			default:
+				builder.setType(SubarchitectureType.CPU);
+			break;
+			}
+			builder.build();
+		}
 	}
 
 }

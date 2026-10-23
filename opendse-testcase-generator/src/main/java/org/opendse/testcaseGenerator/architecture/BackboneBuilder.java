@@ -45,15 +45,11 @@ public class BackboneBuilder extends ArchitectureBuilder{
 		this.numberOfConnections=numberOfConnections;
 		this.rand = rand;
 	}
-
-	@Override
-	public Architecture<Resource, Link> build() {
-		//reset counters for the architecture
-		this.architecture = new Architecture<Resource, Link>();
-		ArchitectureBuilder.resetCounters();
-		
-		List<Switch> switches = new ArrayList<Switch>();
-		
+	
+	/*
+	 * generates the switches forming the backbone that all are interconnected
+	 */
+	private void generateSwitches(List<Switch> switches) {
 		/*
 		 * create the needed switch nodes
 		 */
@@ -75,7 +71,12 @@ public class BackboneBuilder extends ArchitectureBuilder{
 				architecture.addEdge(link, switches.get(j), switches.get(i),EdgeType.DIRECTED);
 			}
 		}
-		
+	}
+	
+	/*
+	 * generates the actual computation resources (sensors, actuators, cpus)
+	 */
+	private void generateResources(List<Resource> resources) {
 		/*
 		 * create cpu nodes and sensors/actuators
 		 * 1/8 will be sensors/actuators each and remaining 3/4 will be cpus
@@ -83,7 +84,6 @@ public class BackboneBuilder extends ArchitectureBuilder{
 		final int sensorNumber = resourceNumber/8;
 		final int actuatorNumber = resourceNumber/8;
 		final int cpuNumber = resourceNumber - sensorNumber - actuatorNumber;
-		List<Resource> resources = new ArrayList<Resource>();
 		//generate sensors
 		for(int i=0;i<sensorNumber;i++) {
 			Sensor sensor = new Sensor("sensor"+useSensorCounter());
@@ -105,8 +105,25 @@ public class BackboneBuilder extends ArchitectureBuilder{
 			architecture.addVertex(cpu);
 			resources.add(cpu);
 		}
+	}
+
+	@Override
+	public Architecture<Resource, Link> build() {
+		//reset counters for the architecture
+		this.architecture = new Architecture<Resource, Link>();
+		ArchitectureBuilder.resetCounters();
 		
+		//generate the switches
+		List<Switch> switches = new ArrayList<Switch>();
+		generateSwitches(switches);
 		
+		//generate the computation resources
+		List<Resource> resources = new ArrayList<Resource>();
+		generateResources(resources);
+		
+		/*
+		 * connect the computation resources to the switches
+		 */
 		if(multipleConnectionsAllowed) {
 			/*
 			 * connect processing resources to one or multiple switches

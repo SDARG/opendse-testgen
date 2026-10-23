@@ -1,6 +1,7 @@
 package org.opendse.testcaseGenerator.mappings;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.opendse.testcaseGenerator.modelextension.Actuator;
 import org.opendse.testcaseGenerator.modelextension.ActuatorTask;
@@ -84,8 +85,9 @@ public class DefaultMapper extends Mapper{
 	 * 					the architecture that should be mapped to
 	 * @param application
 	 * 					the application that should be mapped from
+	 * @throws Exception 
 	 */
-	public Mappings<Task,Resource> map(Architecture<Resource, Link> architecture, Application<Task, Dependency> application){
+	public Mappings<Task,Resource> map(Architecture<Resource, Link> architecture, Application<Task, Dependency> application) throws Exception{
 		resetCounters();
 		// Filters resource types to individual ArrayLists
 		ArrayList<Resource> resourceList = new ArrayList<Resource>(architecture.getVertices());
@@ -108,96 +110,60 @@ public class DefaultMapper extends Mapper{
 			if(task.getAttribute("safetyCritical") != null) {
 				safetyCritical = task.getAttribute("safetyCritical");
 			}
-			int mappingCounter = 0;
 			
+			/*
+			 * check which type of task and then call the mapping function with the correct resource list (e.g. sensors, actuators, cpus, ...)
+			 */
 			if(task instanceof SensorTask) {
-				//generates one mapping for the task
-				Resource sensor = sensors.get(rand.nextInt(sensors.size()));
-				Mapping<Task,Resource> map = new Mapping<Task,Resource>("m"+usemappingCounter(),task,sensor);
-				setAttributes(map);
-				mappings.add(map);
-				mappingCounter++;
-				//randomly sets the rest
-				for ( Resource resource: sensors)
-				{
-					if(resource == sensor) continue;
-					if(rand.nextDouble() <= sensorConnectivity) {
-					Mapping<Task,Resource> mapping = new Mapping<Task,Resource>("m"+usemappingCounter(),task,resource);
-					setAttributes(mapping);
-					mappings.add(mapping);
-					mappingCounter++;
-					}
-				}
-				//if safety critical and only one mapping then add a second one to random resource
-				if(safetyCritical && mappingCounter == 1) {
-					Resource target = sensors.get(rand.nextInt(sensors.size()));
-					while(target == sensor) {
-						target = sensors.get(rand.nextInt(sensors.size()));
-					}
-					Mapping<Task,Resource> mapping = new Mapping<Task,Resource>("m"+usemappingCounter(),task,target);
-					setAttributes(mapping);
-					mappings.add(mapping);
-				}
+				mapOneTask(task, sensors, mappings, safetyCritical);
 			}
-			if(task instanceof ActuatorTask) {
-				//generates one mapping for the task
-				Resource actuator = actuators.get(rand.nextInt(actuators.size()));
-				Mapping<Task,Resource> map = new Mapping<Task,Resource>("m"+usemappingCounter(),task,actuator);
-				setAttributes(map);
-				mappings.add(map);
-				mappingCounter++;
-				//randomly sets the rest
-				for ( Resource resource: actuators)
-				{
-					if(resource == actuator) continue;
-					if(rand.nextDouble() <= actuatorConnectivity) {
-					Mapping<Task,Resource> mapping = new Mapping<Task,Resource>("m"+usemappingCounter(),task,resource);
-					setAttributes(mapping);
-					mappings.add(mapping);
-					mappingCounter++;
-					}
-				}
-				//if safety critical and only one mapping then add a second one to random resource
-				if(safetyCritical && mappingCounter == 1) {
-					Resource target = actuators.get(rand.nextInt(actuators.size()));
-					while(target == actuator) {
-						target = actuators.get(rand.nextInt(actuators.size()));
-					}
-					Mapping<Task,Resource> mapping = new Mapping<Task,Resource>("m"+usemappingCounter(),task,target);
-					setAttributes(mapping);
-					mappings.add(mapping);
-				}
+			else if(task instanceof ActuatorTask) {
+				mapOneTask(task, actuators, mappings, safetyCritical);
 			}
-			if(task instanceof CpuTask) {
-				//generates one mapping for the task
-				Resource cpu = cpus.get(rand.nextInt(cpus.size()));
-				Mapping<Task,Resource> map = new Mapping<Task,Resource>("m"+usemappingCounter(),task,cpu);
-				setAttributes(map);
-				mappings.add(map);
-				//randomly sets the rest
-				for ( Resource resource: cpus)
-				{
-					if(resource == cpu) continue;
-					if(rand.nextDouble() <= processorConnectivity) {
-					Mapping<Task,Resource> mapping = new Mapping<Task,Resource>("m"+usemappingCounter(),task,resource);
-					setAttributes(mapping);
-					mappings.add(mapping);
-					}
-				}
-				//if safety critical and only one mapping then add a second one to random resource
-				if(safetyCritical && mappingCounter == 1) {
-					Resource target = cpus.get(rand.nextInt(cpus.size()));
-					while(target == cpu) {
-						target = cpus.get(rand.nextInt(cpus.size()));
-					}
-					Mapping<Task,Resource> mapping = new Mapping<Task,Resource>("m"+usemappingCounter(),task,target);
-					setAttributes(mapping);
-					mappings.add(mapping);
-				}
+			else if(task instanceof CpuTask) {
+				mapOneTask(task, cpus, mappings, safetyCritical);
+			}
+			else {
+				throw new Exception("task of unknown type cannot be mapped");
 			}
 			
 		}		
 		return mappings;
+	}
+	
+	/**
+	 * This function maps one given task to resources in the given list.
+	 * The mappings are stored in the given {@link Mappings} object.
+	 */
+	private void mapOneTask(Task task, List<Resource> resources, Mappings<Task,Resource> mappings, boolean safetyCritical) {
+		int mappingCounter = 0;
+		//generates one mapping for the task
+		Resource firstTarget = resources.get(rand.nextInt(resources.size()));
+		Mapping<Task,Resource> map = new Mapping<Task,Resource>("m"+usemappingCounter(),task,firstTarget);
+		setAttributes(map);
+		mappings.add(map);
+		mappingCounter++;
+		//randomly sets the rest
+		for ( Resource resource: resources)
+		{
+			if(resource == firstTarget) continue;
+			if(rand.nextDouble() <= sensorConnectivity) {
+			Mapping<Task,Resource> mapping = new Mapping<Task,Resource>("m"+usemappingCounter(),task,resource);
+			setAttributes(mapping);
+			mappings.add(mapping);
+			mappingCounter++;
+			}
+		}
+		//if safety critical and only one mapping then add a second one to random resource
+		if(safetyCritical && mappingCounter == 1) {
+			Resource target = resources.get(rand.nextInt(resources.size()));
+			while(target == firstTarget) {
+				target = resources.get(rand.nextInt(resources.size()));
+			}
+			Mapping<Task,Resource> mapping = new Mapping<Task,Resource>("m"+usemappingCounter(),task,target);
+			setAttributes(mapping);
+			mappings.add(mapping);
+		}
 	}
 	
 	

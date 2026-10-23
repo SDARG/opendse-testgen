@@ -1,27 +1,24 @@
 package org.opendse.testcaseGenerator.architecture;
 
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.List;
 
-import org.opendse.testcaseGenerator.architecture.TileBuilder.TileType;
 import org.opendse.testcaseGenerator.modelextension.Actuator;
 import org.opendse.testcaseGenerator.modelextension.CommInterface;
 import org.opendse.testcaseGenerator.modelextension.Cpu;
-import org.opendse.testcaseGenerator.modelextension.Gateway;
 import org.opendse.testcaseGenerator.modelextension.Sensor;
 import org.opt4j.core.common.random.Rand;
 
 import net.sf.opendse.model.Architecture;
 import net.sf.opendse.model.Link;
 import net.sf.opendse.model.Resource;
-import net.sf.opendse.model.Task;
 /*
  * The SubarchitectureBuilder creates and attaches a substructure with FunctionalResources to a given Resource
  */
 public class SubarchitectureBuilder extends ArchitectureBuilder{
 
 	
-	protected ArrayList<Resource> currentBuslist;
+	protected List<Resource> currentBuslist;
 	protected final Rand rand;
 	protected SubarchitectureType currentType;
 	public  enum SubarchitectureType{
@@ -128,7 +125,7 @@ public class SubarchitectureBuilder extends ArchitectureBuilder{
 	/*
 	 * sets the Resource to which the tile should be connected
 	 */
-	public void setBus(ArrayList<Resource> buslist) {
+	public void setBus(List<Resource> buslist) {
 		this.currentBuslist = buslist;
 	}
 	

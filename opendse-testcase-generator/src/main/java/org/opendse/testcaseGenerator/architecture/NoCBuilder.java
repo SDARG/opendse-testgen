@@ -1,16 +1,13 @@
 package org.opendse.testcaseGenerator.architecture;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import org.opendse.testcaseGenerator.architecture.TileBuilder.TileType;
-import org.opendse.testcaseGenerator.modelextension.CommunicationResource;
 import org.opendse.testcaseGenerator.modelextension.NoCRouter;
 import org.opt4j.core.common.random.Rand;
 import org.opt4j.core.start.Constant;
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 import net.sf.opendse.model.Architecture;
 import net.sf.opendse.model.Link;

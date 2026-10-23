@@ -1,13 +1,10 @@
 package org.opendse.testcaseGenerator.architecture;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import org.opendse.testcaseGenerator.modelextension.CommInterface;
 import org.opendse.testcaseGenerator.modelextension.Cpu;
 import org.opt4j.core.common.random.Rand;
-
-import com.google.inject.Inject;
 
 import net.sf.opendse.model.Architecture;
 import net.sf.opendse.model.Link;

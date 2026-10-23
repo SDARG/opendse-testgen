@@ -1,6 +1,7 @@
 package org.opendse.testcaseGenerator.application;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.opendse.testcaseGenerator.architecture.ArchitectureBuilder;
 import org.opendse.testcaseGenerator.modelextension.ActuatorTask;
@@ -68,7 +69,152 @@ public class ParallelApplicationBuilder extends ApplicationBuilder {
 		else {
 			this.numberOfParallelFunctions=numberOfParallelFunctions;
 		}
+	}
+	
+	/*
+	 * generates the start tasks, i.e. the tasks that have no incoming edge
+	 */
+	private void generateStartTasks(int sensorTasksPerFunction, Function<Task,Dependency> function, List<Task> openOutputs) {
+		/*
+		 * Creates #startTasks Tasks to start the application.
+		 * generates sensor tasks if the architecture has enough sensors, otherwise CPU tasks.
+		 */
+		for (int i = 0; i < startTasks;i++) {
+			if(ArchitectureBuilder.getSensorCounter() > 0 && i < sensorTasksPerFunction) {
+				Task sT = new SensorTask("t"+usetaskCounter());
+				function.addVertex(sT);
+				if(addMessages) {
+					Task c = new Communication("c"+usecommCounter());
+					function.addVertex(c);
+					function.addEdge(new Dependency("d"+usedependencyCounter()),sT,c);
+					openOutputs.add(c);
+				}
+				else {
+					openOutputs.add(sT);
+				}
+			} else {
+				Task cT = new CpuTask("t"+usetaskCounter());
+				function.addVertex(cT);
+				if(addMessages) {
+					Task comm = new Communication("c"+usecommCounter());
+					function.addVertex(comm);
+					function.addEdge(new Dependency("d"+usedependencyCounter()),cT,comm);
+					openOutputs.add(comm);
+				} else {
+					openOutputs.add(cT);
+				}
+			}
+			
+		}
+	}
+	
+	/*
+	 * connects start tasks to intermediate tasks and the intermediate tasks with each other
+	 */
+	private void connectIntermediateTasks(Function<Task, Dependency> function, List<Task> openInputs, List<Task> openOutputs) {
+		/*
+		 * arranges all generated Tasks into a structured application
+		 */
+		while(!openInputs.isEmpty()) {
+			//temp storage for tasks with open In-/Outputs
+			ArrayList<Task> tempOpenInputs = new ArrayList<Task>();
+			ArrayList<Task> tempOpenOutputs = new ArrayList<Task>();
+			for(int i = 0; i < rand.nextInt(Math.min( maxwidth,openInputs.size())+1);i++){
+				Task t = openInputs.remove(0);
+				tempOpenInputs.add(t);	
+				if(addMessages) {
+					Task comm  = new Communication("c"+usecommCounter());
+					function.addVertex(comm);
+					function.addEdge(new Dependency("d"+usedependencyCounter()), t, comm);	
+					tempOpenOutputs.add(comm);
+				} else {
+					tempOpenOutputs.add(t);
+				}
+			}
+			
+			/*
+			 * Connects all tasks that have been saved to be connected to the created tasks, sets connections depending on interDependency value
+			 */
+			boolean[] connectedTasks = new boolean[tempOpenInputs.size()];
+			for(Task comm : openOutputs) {
+				boolean connected = false;
+				for(Task task : tempOpenInputs) {
+					if(rand.nextDouble() < interDependency) {
+						function.addEdge(new Dependency("d"+usedependencyCounter()), comm, task);
+						connected = true;
+						connectedTasks[tempOpenInputs.indexOf(task)] = true;
+					}
+				}
+				if(!connected) {
+					tempOpenOutputs.add(comm);
+				}
+			}
+			/*
+			 * each newly created task gets at least one input connection
+			 * so after current iteration every task in the function has at least one input
+			 */
+			for(int i = 0; i < connectedTasks.length;i++) {
+				if(!connectedTasks[i]) {
+					//choose one openOutput task at random, connect him to a task with missing input, and then remove openOutput from list
+					Task openOutput = openOutputs.get(rand.nextInt(openOutputs.size()));
+					function.addEdge(new Dependency("d"+usedependencyCounter()), openOutput, tempOpenInputs.get(i));
+					tempOpenOutputs.remove(openOutput);
+				}
+			}
+			/*
+			 * Saves the just created tasks to be connected to in the next iteration
+			 */
+			openOutputs = tempOpenOutputs;
+		}
+	}
+	
+	/*
+	 * connects all intermediate tasks without outgoing edge to the end tasks
+	 */
+	private void connectEndTasks(Function<Task, Dependency> function, List<Task> openInputs, List<Task> openOutputs) {
+		/*
+		 * temp storage for tasks with open In-/Output
+		 */
+		ArrayList<Task> tempOpenInput = new ArrayList<Task>();
+		ArrayList<Task> tempOpenOutput = new ArrayList<Task>(openOutputs);
 		
+		/*
+		 * Connect the open Tasks to the created endTasks
+		 */
+		for(Task task : openInputs) {
+			boolean taskConnected = false;
+			for(Task comm : openOutputs) {
+				if(rand.nextDouble() < interDependency) {
+					function.addEdge(new Dependency("d"+usedependencyCounter()), comm, task);
+					taskConnected = true;
+					tempOpenOutput.remove(comm);
+				}
+			}
+			if(!taskConnected) {
+				tempOpenInput.add(task);
+			}
+		}
+		
+		/*
+		 * Prevents unwanted open ends by connecting remaining tasks
+		 */
+		for(Task task : tempOpenOutput) {
+			Task t;
+			if(tempOpenInput.size() > 0) {
+				t = tempOpenInput.remove(rand.nextInt(tempOpenInput.size()));
+			} else {
+				t = openInputs.get(rand.nextInt(openInputs.size()));
+			}
+			function.addEdge(new Dependency("d"+usedependencyCounter()), task, t );
+		}
+		
+		for(Task task : tempOpenInput) {
+			if(tempOpenOutput.size() > 0) {
+				function.addEdge(new Dependency("d"+usedependencyCounter()), tempOpenOutput.get(rand.nextInt(tempOpenOutput.size())), task);
+			}else {
+				function.addEdge(new Dependency("d"+usedependencyCounter()), openOutputs.get(rand.nextInt(openOutputs.size())), task);	
+			}
+		}
 	}
 
 	/**
@@ -102,37 +248,9 @@ public class ParallelApplicationBuilder extends ApplicationBuilder {
 			 */
 			int cpuTaskCount = Math.max(1,((int)Math.ceil(ArchitectureBuilder.getCpuCounter() * taskMult )) - ( endTasks + startTasks ));
 			
-			/*
-			 * Creates #startTasks Tasks to start the application.
-			 * generates sensor tasks if the architecture has enough sensors, otherwise CPU tasks.
-			 */
-			for (int i = 0; i < startTasks;i++) {
-				if(ArchitectureBuilder.getSensorCounter() > 0 && i < sensorTasksPerFunction) {
-					Task sT = new SensorTask("t"+usetaskCounter());
-					function.addVertex(sT);
-					if(addMessages) {
-						Task c = new Communication("c"+usecommCounter());
-						function.addVertex(c);
-						function.addEdge(new Dependency("d"+usedependencyCounter()),sT,c);
-						openOutputs.add(c);
-					}
-					else {
-						openOutputs.add(sT);
-					}
-				} else {
-					Task cT = new CpuTask("t"+usetaskCounter());
-					function.addVertex(cT);
-					if(addMessages) {
-						Task comm = new Communication("c"+usecommCounter());
-						function.addVertex(comm);
-						function.addEdge(new Dependency("d"+usedependencyCounter()),cT,comm);
-						openOutputs.add(comm);
-					} else {
-						openOutputs.add(cT);
-					}
-				}
-				
-			}
+			//generate the first layer of tasks
+			generateStartTasks(sensorTasksPerFunction, function, openOutputs);
+			
 			/*
 			 * generates a number of Tasks equal to the cpuTaskCount
 			 */
@@ -141,60 +259,10 @@ public class ParallelApplicationBuilder extends ApplicationBuilder {
 				function.addVertex(t);
 				openInputs.add(t);
 			}
-			/*
-			 * arranges all generated Tasks into a structured application
-			 */
-			while(!openInputs.isEmpty()) {
-				//temp storage for tasks with open In-/Outputs
-				ArrayList<Task> tempOpenInputs = new ArrayList<Task>();
-				ArrayList<Task> tempOpenOutputs = new ArrayList<Task>();
-				for(int i = 0; i < rand.nextInt(Math.min( maxwidth,openInputs.size())+1);i++){
-					Task t = openInputs.remove(0);
-					tempOpenInputs.add(t);	
-					if(addMessages) {
-						Task comm  = new Communication("c"+usecommCounter());
-						function.addVertex(comm);
-						function.addEdge(new Dependency("d"+usedependencyCounter()), t, comm);	
-						tempOpenOutputs.add(comm);
-					} else {
-						tempOpenOutputs.add(t);
-					}
-				}
-				
-				/*
-				 * Connects all tasks that have been saved to be connected to the created tasks, sets connections depending on interDependency value
-				 */
-				boolean[] connectedTasks = new boolean[tempOpenInputs.size()];
-				for(Task comm : openOutputs) {
-					boolean connected = false;
-					for(Task task : tempOpenInputs) {
-						if(rand.nextDouble() < interDependency) {
-							function.addEdge(new Dependency("d"+usedependencyCounter()), comm, task);
-							connected = true;
-							connectedTasks[tempOpenInputs.indexOf(task)] = true;
-						}
-					}
-					if(!connected) {
-						tempOpenOutputs.add(comm);
-					}
-				}
-				/*
-				 * each newly created task gets at least one input connection
-				 * so after current iteration every task in the function has at least one input
-				 */
-				for(int i = 0; i < connectedTasks.length;i++) {
-					if(!connectedTasks[i]) {
-						//choose one openOutput task at random, connect him to a task with missing input, and then remove openOutput from list
-						Task openOutput = openOutputs.get(rand.nextInt(openOutputs.size()));
-						function.addEdge(new Dependency("d"+usedependencyCounter()), openOutput, tempOpenInputs.get(i));
-						tempOpenOutputs.remove(openOutput);
-					}
-				}
-				/*
-				 * Saves the just created tasks to be connected to in the next iteration
-				 */
-				openOutputs = tempOpenOutputs;
-			}
+			
+			//connect start tasks and intermediate tasks to each other
+			connectIntermediateTasks(function, openInputs, openOutputs);
+			
 			/*
 			 * Creates #endTasks Tasks to end the application.
 			 * generates actuator tasks if the architecture has actuators.
@@ -212,49 +280,9 @@ public class ParallelApplicationBuilder extends ApplicationBuilder {
 				}
 			}
 			
-			/*
-			 * temp storage for tasks with open In-/Output
-			 */
-			ArrayList<Task> tempOpenInput = new ArrayList<Task>();
-			ArrayList<Task> tempOpenOutput = new ArrayList<Task>(openOutputs);
+			//connect end tasks to intermediate tasks without outgoing edge
+			connectEndTasks(function, openInputs, openOutputs);
 			
-			/*
-			 * Connect the open Tasks to the created endTasks
-			 */
-			for(Task task : openInputs) {
-				boolean taskConnected = false;
-				for(Task comm : openOutputs) {
-					if(rand.nextDouble() < interDependency) {
-						function.addEdge(new Dependency("d"+usedependencyCounter()), comm, task);
-						taskConnected = true;
-						tempOpenOutput.remove(comm);
-					}
-				}
-				if(!taskConnected) {
-					tempOpenInput.add(task);
-				}
-			}
-			
-			/*
-			 * Prevents unwanted open ends by connecting remaining tasks
-			 */
-			for(Task task : tempOpenOutput) {
-				Task t;
-				if(tempOpenInput.size() > 0) {
-					t = tempOpenInput.remove(rand.nextInt(tempOpenInput.size()));
-				} else {
-					t = openInputs.get(rand.nextInt(openInputs.size()));
-				}
-				function.addEdge(new Dependency("d"+usedependencyCounter()), task, t );
-			}
-			
-			for(Task task : tempOpenInput) {
-				if(tempOpenOutput.size() > 0) {
-					function.addEdge(new Dependency("d"+usedependencyCounter()), tempOpenOutput.get(rand.nextInt(tempOpenOutput.size())), task);
-				}else {
-					function.addEdge(new Dependency("d"+usedependencyCounter()), openOutputs.get(rand.nextInt(openOutputs.size())), task);	
-				}
-			}
 			//add function to whole application
 			application.add(function);
 		}

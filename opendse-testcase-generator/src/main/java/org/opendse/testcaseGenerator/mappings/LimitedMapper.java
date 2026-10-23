@@ -2,6 +2,7 @@ package org.opendse.testcaseGenerator.mappings;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.opendse.testcaseGenerator.modelextension.Actuator;
@@ -81,8 +82,9 @@ public class LimitedMapper extends Mapper {
 	 * 					the architecture that should be mapped to
 	 * @param application
 	 * 					the application that should be mapped from
+	 * @throws Exception 
 	 */
-	public Mappings<Task,Resource> map(Architecture<Resource, Link> architecture, Application<Task, Dependency> application){
+	public Mappings<Task,Resource> map(Architecture<Resource, Link> architecture, Application<Task, Dependency> application) throws Exception{
 		resetCounters();
 		// Filters resource types to individual ArrayLists
 		ArrayList<Resource> resourceList = new ArrayList<Resource>(architecture.getVertices());
@@ -106,120 +108,70 @@ public class LimitedMapper extends Mapper {
 			 */
 			int mappingsToCreate = rand.nextInt(1, mappingLimit+1);
 			/*
-			 * if safety critical task and only one mappings should be created, increase the number to 3
+			 * if safety critical task and only one mappings should be created, increase the number to 2
 			 */
+			boolean safetyCritical = false;
 			if(task.getAttribute("safetyCritical") != null) {
-				boolean safetyCritical = task.getAttribute("safetyCritical");
+				safetyCritical = task.getAttribute("safetyCritical");
 				if(safetyCritical) {
 					if(mappingsToCreate < 2) {
-						mappingsToCreate = 3;
+						mappingsToCreate = 2;
 					}
 				}
 			}
 			if(task instanceof SensorTask) {
-				/*
-				 * check if limit greater or equal to sensor number
-				 * if so, just generate mapping to every sensor without random
-				 */
-				if(mappingsToCreate >= sensors.size()) {
-					for(Resource sensor: sensors) {
-						Mapping<Task,Resource> mapping = new Mapping<Task,Resource>("m"+usemappingCounter(),task,sensor);
-						setAttributes(mapping);
-						mappings.add(mapping);
-					}
-					continue;
-				}
-				/*
-				 * generates randomly chosen number of mappings
-				 */
-				int mappingsCreated = 0;
-				Set<Resource> mappingTargets = new HashSet<Resource>();
-				while(mappingsCreated < mappingsToCreate) {
-					Resource sensor = sensors.get(rand.nextInt(sensors.size()));
-					/*
-					 * Check if already a mapping target
-					 * in that case choose a new target to ensure no double mappings
-					 */
-					if(mappingTargets.contains(sensor)) {
-						continue;
-					}
-					Mapping<Task,Resource> map = new Mapping<Task,Resource>("m"+usemappingCounter(),task,sensor);
-					setAttributes(map);
-					mappings.add(map);
-					mappingTargets.add(sensor);
-					mappingsCreated++;
-				}
+				mapOneTask(task, sensors, mappings, safetyCritical, mappingsToCreate);
 			}
-			if(task instanceof ActuatorTask) {
-				/*
-				 * check if limit greater or equal to actuator number
-				 * if so, just generate mapping to every actuator without random
-				 */
-				if(mappingsToCreate >= actuators.size()) {
-					for(Resource actuator: actuators) {
-						Mapping<Task,Resource> mapping = new Mapping<Task,Resource>("m"+usemappingCounter(),task,actuator);
-						setAttributes(mapping);
-						mappings.add(mapping);
-					}
-					continue;
-				}
-				/*
-				 * generates randomly chosen number of mappings
-				 */
-				int mappingsCreated = 0;
-				Set<Resource> mappingTargets = new HashSet<Resource>();
-				while(mappingsCreated < mappingsToCreate) {
-					Resource actuator = actuators.get(rand.nextInt(actuators.size()));
-					/*
-					 * Check if already a mapping target
-					 * in that case choose a new target to ensure no double mappings
-					 */
-					if(mappingTargets.contains(actuator)) {
-						continue;
-					}
-					Mapping<Task,Resource> map = new Mapping<Task,Resource>("m"+usemappingCounter(),task,actuator);
-					setAttributes(map);
-					mappings.add(map);
-					mappingTargets.add(actuator);
-					mappingsCreated++;
-				}
+			else if(task instanceof ActuatorTask) {
+				mapOneTask(task, actuators, mappings, safetyCritical, mappingsToCreate);
 			}
-			if(task instanceof CpuTask) {
-				/*
-				 * check if limit greater or equal to actuator number
-				 * if so, just generate mapping to every actuator without random
-				 */
-				if(mappingsToCreate >= cpus.size()) {
-					for(Resource cpu: cpus) {
-						Mapping<Task,Resource> mapping = new Mapping<Task,Resource>("m"+usemappingCounter(),task,cpu);
-						setAttributes(mapping);
-						mappings.add(mapping);
-					}
-					continue;
-				}
-				/*
-				 * generates randomly chosen number of mappings
-				 */
-				int mappingsCreated = 0;
-				Set<Resource> mappingTargets = new HashSet<Resource>();
-				while(mappingsCreated < mappingsToCreate) {
-					Resource cpu = cpus.get(rand.nextInt(cpus.size()));
-					/*
-					 * Check if already a mapping target
-					 * in that case choose a new target to ensure no double mappings
-					 */
-					if(mappingTargets.contains(cpu)) {
-						continue;
-					}
-					Mapping<Task,Resource> map = new Mapping<Task,Resource>("m"+usemappingCounter(),task,cpu);
-					setAttributes(map);
-					mappings.add(map);
-					mappingTargets.add(cpu);
-					mappingsCreated++;
-				}
-			}	
-		}		
+			else if(task instanceof CpuTask) {
+				mapOneTask(task, cpus, mappings, safetyCritical, mappingsToCreate);
+			}
+			else {
+				throw new Exception("task of unknown type cannot be mapped");
+			}
+		}
 		return mappings;
+	}
+	
+	/**
+	 * This function maps one given task to resources in the given list up to a given limit.
+	 * The mappings are stored in the given {@link Mappings} object.
+	 */
+	private void mapOneTask(Task task, List<Resource> resources, Mappings<Task,Resource> mappings, boolean safetyCritical, int mappingsToCreate) {
+		/*
+		 * check if limit greater or equal to sensor number
+		 * if so, just generate mapping to every sensor without random
+		 */
+		if(mappingsToCreate >= resources.size()) {
+			for(Resource target: resources) {
+				Mapping<Task,Resource> mapping = new Mapping<Task,Resource>("m"+usemappingCounter(),task,target);
+				setAttributes(mapping);
+				mappings.add(mapping);
+			}
+			return;
+		}
+		/*
+		 * generates chosen number of mappings
+		 */
+		int mappingsCreated = 0;
+		Set<Resource> mappingTargets = new HashSet<Resource>();
+		while(mappingsCreated < mappingsToCreate) {
+			Resource target = resources.get(rand.nextInt(resources.size()));
+			/*
+			 * Check if already a mapping target
+			 * in that case choose a new target to ensure no double mappings
+			 */
+			if(mappingTargets.contains(target)) {
+				continue;
+			}
+			Mapping<Task,Resource> map = new Mapping<Task,Resource>("m"+usemappingCounter(),task,target);
+			setAttributes(map);
+			mappings.add(map);
+			mappingTargets.add(target);
+			mappingsCreated++;
+		}
 	}
 	
 	

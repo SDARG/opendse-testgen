@@ -36,8 +36,8 @@ public class SpecificationBuilder {
 		 FunctionalResource.rand = rand;
 		 CommunicationResource.rand = rand;
 	}
+	
 	/*
-	 * creates the parts of the specification
 	 * builds and returns the specification
 	 */
 	public Specification build() {
@@ -47,6 +47,7 @@ public class SpecificationBuilder {
 		 */
 		arcBuilder.build();
 		Architecture<Resource, Link> architecture = arcBuilder.build();
+		
 		/*
 		 * Builds the application according to parameters
 		 */
@@ -55,8 +56,12 @@ public class SpecificationBuilder {
 		/*
 		 * Sets all mappings according to parameters
 		 */		
-		
-		Mappings<Task, Resource> mappings = mapper.map(architecture, application);
+		Mappings<Task, Resource> mappings = null;
+		try {
+			mappings = mapper.map(architecture, application);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 	
 		return new Specification(application, architecture, mappings);
