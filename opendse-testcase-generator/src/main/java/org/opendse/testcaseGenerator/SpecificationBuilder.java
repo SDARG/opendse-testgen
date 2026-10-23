@@ -56,12 +56,7 @@ public class SpecificationBuilder {
 		/*
 		 * Sets all mappings according to parameters
 		 */		
-		Mappings<Task, Resource> mappings = null;
-		try {
-			mappings = mapper.map(architecture, application);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		Mappings<Task, Resource> mappings = mapper.map(architecture, application);
 		
 	
 		return new Specification(application, architecture, mappings);

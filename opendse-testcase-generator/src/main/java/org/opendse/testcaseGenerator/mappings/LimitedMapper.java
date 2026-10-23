@@ -84,7 +84,7 @@ public class LimitedMapper extends Mapper {
 	 * 					the application that should be mapped from
 	 * @throws Exception 
 	 */
-	public Mappings<Task,Resource> map(Architecture<Resource, Link> architecture, Application<Task, Dependency> application) throws Exception{
+	public Mappings<Task,Resource> map(Architecture<Resource, Link> architecture, Application<Task, Dependency> application){
 		resetCounters();
 		// Filters resource types to individual ArrayLists
 		ArrayList<Resource> resourceList = new ArrayList<Resource>(architecture.getVertices());
@@ -120,16 +120,14 @@ public class LimitedMapper extends Mapper {
 				}
 			}
 			if(task instanceof SensorTask) {
-				mapOneTask(task, sensors, mappings, safetyCritical, mappingsToCreate);
+				mapOneTask(task, sensors, mappings, mappingsToCreate);
 			}
 			else if(task instanceof ActuatorTask) {
-				mapOneTask(task, actuators, mappings, safetyCritical, mappingsToCreate);
+				mapOneTask(task, actuators, mappings, mappingsToCreate);
 			}
-			else if(task instanceof CpuTask) {
-				mapOneTask(task, cpus, mappings, safetyCritical, mappingsToCreate);
-			}
+			//else case is cpu as the default resource
 			else {
-				throw new Exception("task of unknown type cannot be mapped");
+				mapOneTask(task, cpus, mappings, mappingsToCreate);
 			}
 		}
 		return mappings;
@@ -139,7 +137,7 @@ public class LimitedMapper extends Mapper {
 	 * This function maps one given task to resources in the given list up to a given limit.
 	 * The mappings are stored in the given {@link Mappings} object.
 	 */
-	private void mapOneTask(Task task, List<Resource> resources, Mappings<Task,Resource> mappings, boolean safetyCritical, int mappingsToCreate) {
+	private void mapOneTask(Task task, List<Resource> resources, Mappings<Task,Resource> mappings, int mappingsToCreate) {
 		/*
 		 * check if limit greater or equal to sensor number
 		 * if so, just generate mapping to every sensor without random

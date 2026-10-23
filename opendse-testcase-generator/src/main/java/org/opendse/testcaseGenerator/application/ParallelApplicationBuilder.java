@@ -164,7 +164,8 @@ public class ParallelApplicationBuilder extends ApplicationBuilder {
 			/*
 			 * Saves the just created tasks to be connected to in the next iteration
 			 */
-			openOutputs = tempOpenOutputs;
+			openOutputs.clear();
+			openOutputs.addAll(tempOpenOutputs);
 		}
 	}
 	

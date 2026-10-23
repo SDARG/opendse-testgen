@@ -87,7 +87,7 @@ public class DefaultMapper extends Mapper{
 	 * 					the application that should be mapped from
 	 * @throws Exception 
 	 */
-	public Mappings<Task,Resource> map(Architecture<Resource, Link> architecture, Application<Task, Dependency> application) throws Exception{
+	public Mappings<Task,Resource> map(Architecture<Resource, Link> architecture, Application<Task, Dependency> application){
 		resetCounters();
 		// Filters resource types to individual ArrayLists
 		ArrayList<Resource> resourceList = new ArrayList<Resource>(architecture.getVertices());
@@ -120,11 +120,9 @@ public class DefaultMapper extends Mapper{
 			else if(task instanceof ActuatorTask) {
 				mapOneTask(task, actuators, mappings, safetyCritical);
 			}
-			else if(task instanceof CpuTask) {
-				mapOneTask(task, cpus, mappings, safetyCritical);
-			}
+			//else case is cpu as the default resource
 			else {
-				throw new Exception("task of unknown type cannot be mapped");
+				mapOneTask(task, cpus, mappings, safetyCritical);
 			}
 			
 		}		

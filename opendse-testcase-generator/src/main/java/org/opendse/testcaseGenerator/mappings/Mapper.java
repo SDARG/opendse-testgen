@@ -20,7 +20,7 @@ public abstract class Mapper {
 	public Mapper() {
 	}
 	
-	public abstract Mappings<Task,Resource> map(Architecture<Resource, Link> architecture, Application<Task, Dependency> application) throws Exception;
+	public abstract Mappings<Task,Resource> map(Architecture<Resource, Link> architecture, Application<Task, Dependency> application);
 	
 	public static int usemappingCounter() {
 		mappingCounter++;
