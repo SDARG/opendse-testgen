@@ -52,7 +52,7 @@ public class GeneratorTask extends Task{
 	public void execute() throws Exception {
 		open();
 		TestcaseGenerator generator = injector.getInstance(TestcaseGenerator.class);
-		generator.GenerateTestcases();
+		generator.generateTestcases();
 		if (closeOnStop) {
 			close();
 		}

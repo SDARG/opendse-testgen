@@ -40,7 +40,7 @@ public class ArchitectureModule extends GeneratorModule{
 	@Order(2)
 	@Info("Should the gateway architecture come with a multibus layout.")
 	@Constant(value = "multibus", namespace = GatewayBuilder.class)
-	public boolean multibus = true;
+	public boolean multibus = false;
 	
 	@Required(property = "type", elements = { "Gateway" })
 	@Order(3)

@@ -27,7 +27,8 @@ import com.google.inject.Module;
  * The {@link Generator} configuration GUI.
  * based on {@link Opt4J}
  * 
- */ class Generator extends Opt4J{
+ */
+public class Generator extends Opt4J{
 	
 	
 	public static void main(String[] args) throws Exception{

@@ -2,6 +2,7 @@ package org.opendse.testcasegenerator.application;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.opendse.testcasegenerator.architecture.ArchitectureBuilder;
 import org.opendse.testcasegenerator.modelextension.ActuatorTask;
@@ -69,6 +70,79 @@ public class ParallelApplicationBuilder extends ApplicationBuilder {
 		else {
 			this.numberOfParallelFunctions=numberOfParallelFunctions;
 		}
+	}
+	
+	/**
+	 * Creates an Application that is scaled in size with architecture size and taskMult value with the specified amount of parallel functions.
+	 */
+	public Application<Task,Dependency> build(){
+		resetCounters();
+		application = new Application<Task,Dependency>();
+		
+		/*
+		 * calculate number of sensor/actuator tasks per function to allow feasible specification
+		 */
+		int sensorTasksPerFunction = (int)Math.floor(ArchitectureBuilder.getSensorCounter()/numberOfParallelFunctions);
+		int actuatorTasksPerFunction = (int)Math.floor(ArchitectureBuilder.getActuatorCounter()/numberOfParallelFunctions);
+		
+		/*
+		 * build number of parallel functions specified
+		 * each one gets specified start/end tasks and number of tasks
+		 */
+		for(int j=0;j<numberOfParallelFunctions;j++) {
+			//create new function with unique id
+			Function<Task, Dependency> function = new Function<Task, Dependency>("func"+j);
+			
+			//stores all tasks that have no output connection yet and should have one
+			ArrayList<Task> openOutputs = new ArrayList<Task>();
+			//stores all tasks that have no input connection yet and should have one
+			ArrayList<Task> openInputs = new ArrayList<Task>();
+			
+			/*
+			 * Calculates cpuTaskCount from Architecture size and taskMult
+			 */
+			int cpuTaskCount = Math.max(1,((int)Math.ceil(ArchitectureBuilder.getCpuCounter() * taskMult )) - ( endTasks + startTasks ));
+			
+			//generate the first layer of tasks
+			generateStartTasks(sensorTasksPerFunction, function, openOutputs);
+			
+			/*
+			 * generates a number of Tasks equal to the cpuTaskCount
+			 */
+			for (int i = 0; i < cpuTaskCount;i++) {
+				Task t = new CpuTask("t"+usetaskCounter());
+				function.addVertex(t);
+				openInputs.add(t);
+			}
+			
+			//connect start tasks and intermediate tasks to each other
+			connectIntermediateTasks(function, openInputs, openOutputs);
+			
+			/*
+			 * Creates #endTasks Tasks to end the application.
+			 * generates actuator tasks if the architecture has actuators.
+			 */
+			for (int i = 0; i < endTasks;i++) {
+				if(ArchitectureBuilder.getActuatorCounter() > 0 && i < actuatorTasksPerFunction) {
+					Task aT = new ActuatorTask("t"+usetaskCounter());
+					function.addVertex(aT);
+					openInputs.add(aT);
+				}
+				else {
+					Task cT = new CpuTask("t"+usetaskCounter());
+					openInputs.add(cT);
+					function.addVertex(cT);
+				}
+			}
+			
+			//connect end tasks to intermediate tasks without outgoing edge
+			connectEndTasks(function, openInputs, openOutputs);
+			
+			//add function to whole application
+			application.add(function);
+		}
+		
+		return application;
 	}
 	
 	/*
@@ -216,79 +290,9 @@ public class ParallelApplicationBuilder extends ApplicationBuilder {
 				function.addEdge(new Dependency("d"+usedependencyCounter()), openOutputs.get(rand.nextInt(openOutputs.size())), task);	
 			}
 		}
-	}
-
-	/**
-	 * Creates an Application that is scaled in size with architecture size and taskMult value with the specified amount of parallel functions.
-	 */
-	public Application<Task,Dependency> build(){
-		resetCounters();
-		application = new Application<Task,Dependency>();
 		
-		/*
-		 * calculate number of sensor/actuator tasks per function to allow feasible specification
-		 */
-		int sensorTasksPerFunction = (int)Math.floor(ArchitectureBuilder.getSensorCounter()/numberOfParallelFunctions);
-		int actuatorTasksPerFunction = (int)Math.floor(ArchitectureBuilder.getActuatorCounter()/numberOfParallelFunctions);
-		
-		/*
-		 * build number of parallel functions specified
-		 * each one gets specified start/end tasks and number of tasks
-		 */
-		for(int j=0;j<numberOfParallelFunctions;j++) {
-			//create new function with unique id
-			Function<Task, Dependency> function = new Function<Task, Dependency>("func"+j);
-			
-			//stores all tasks that have no output connection yet and should have one
-			ArrayList<Task> openOutputs = new ArrayList<Task>();
-			//stores all tasks that have no input connection yet and should have one
-			ArrayList<Task> openInputs = new ArrayList<Task>();
-			
-			/*
-			 * Calculates cpuTaskCount from Architecture size and taskMult
-			 */
-			int cpuTaskCount = Math.max(1,((int)Math.ceil(ArchitectureBuilder.getCpuCounter() * taskMult )) - ( endTasks + startTasks ));
-			
-			//generate the first layer of tasks
-			generateStartTasks(sensorTasksPerFunction, function, openOutputs);
-			
-			/*
-			 * generates a number of Tasks equal to the cpuTaskCount
-			 */
-			for (int i = 0; i < cpuTaskCount;i++) {
-				Task t = new CpuTask("t"+usetaskCounter());
-				function.addVertex(t);
-				openInputs.add(t);
-			}
-			
-			//connect start tasks and intermediate tasks to each other
-			connectIntermediateTasks(function, openInputs, openOutputs);
-			
-			/*
-			 * Creates #endTasks Tasks to end the application.
-			 * generates actuator tasks if the architecture has actuators.
-			 */
-			for (int i = 0; i < endTasks;i++) {
-				if(ArchitectureBuilder.getActuatorCounter() > 0 && i < actuatorTasksPerFunction) {
-					Task aT = new ActuatorTask("t"+usetaskCounter());
-					function.addVertex(aT);
-					openInputs.add(aT);
-				}
-				else {
-					Task cT = new CpuTask("t"+usetaskCounter());
-					openInputs.add(cT);
-					function.addVertex(cT);
-				}
-			}
-			
-			//connect end tasks to intermediate tasks without outgoing edge
-			connectEndTasks(function, openInputs, openOutputs);
-			
-			//add function to whole application
-			application.add(function);
-		}
-		
-		return application;
+		//check if function fully connected, if not then add additional edges
+		handleUnconnectedFunction(function);
 	}
 
 }

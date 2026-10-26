@@ -1,7 +1,6 @@
 package org.opendse.testcasegenerator.mappings;
 
 import com.google.inject.ImplementedBy;
-import com.google.inject.Inject;
 
 import net.sf.opendse.model.Application;
 import net.sf.opendse.model.Architecture;
@@ -11,14 +10,15 @@ import net.sf.opendse.model.Mappings;
 import net.sf.opendse.model.Resource;
 import net.sf.opendse.model.Task;
 
+/**
+ * The {@link Mapper} is an abstract class that defines the methods each concrete mapper needs to implement.
+ * Additionally the index counters when naming stuff during the mapping process are managed here.
+ */
 @ImplementedBy(DefaultMapper.class)
 public abstract class Mapper {
 
 	private static int mappingCounter = 0;
 	
-	@Inject
-	public Mapper() {
-	}
 	
 	public abstract Mappings<Task,Resource> map(Architecture<Resource, Link> architecture, Application<Task, Dependency> application);
 	

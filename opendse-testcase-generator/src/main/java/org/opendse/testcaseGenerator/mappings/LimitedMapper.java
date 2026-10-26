@@ -92,8 +92,8 @@ public class LimitedMapper extends Mapper {
 		ArrayList<Resource> sensors = new ArrayList<Resource>();
 		for ( Resource resource: resourceList) {
 			if(resource instanceof Cpu) cpus.add(resource);
-			if(resource instanceof Actuator) actuators.add(resource);
-			if(resource instanceof Sensor) sensors.add(resource);
+			else if(resource instanceof Actuator) actuators.add(resource);
+			else if(resource instanceof Sensor) sensors.add(resource);
 		}
 		
 		ArrayList<Task> taskList = new ArrayList<Task>(application.getVertices());
@@ -112,10 +112,9 @@ public class LimitedMapper extends Mapper {
 			boolean safetyCritical = false;
 			if(task.getAttribute("safetyCritical") != null) {
 				safetyCritical = task.getAttribute("safetyCritical");
-				if(safetyCritical) {
-					if(mappingsToCreate < 2) {
-						mappingsToCreate = 2;
-					}
+				//if a safety critical task ensure at least two mapping options are provided
+				if(safetyCritical && (mappingsToCreate < 2)) {
+					mappingsToCreate = 2;
 				}
 			}
 			if(task instanceof SensorTask) {
@@ -124,7 +123,7 @@ public class LimitedMapper extends Mapper {
 			else if(task instanceof ActuatorTask) {
 				mapOneTask(task, actuators, mappings, mappingsToCreate);
 			}
-			//else case is cpu as the default resource
+			//else case is cpu as the default resource type
 			else {
 				mapOneTask(task, cpus, mappings, mappingsToCreate);
 			}

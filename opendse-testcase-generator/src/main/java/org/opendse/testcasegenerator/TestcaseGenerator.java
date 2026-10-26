@@ -46,21 +46,20 @@ public class TestcaseGenerator {
 	
 	}
 	
-	/*
-	 * Generates am amount of {@link Specifications} as specified by numberOfSpecs
+	/**
+	 * Generates as many {@link Specifications} as specified by numberOfSpecs
 	 */
-	public void GenerateTestcases() {
+	public void generateTestcases() {
 		for(int i = 1; i <= numberOfSpecs; i++) {
-			GenerateTestcase(i);
+			generateTestcase(i);
 		}
 	}
 
-	/*
-	 * Generates a single  {@link Specifications} and writes it to the file specified by filename
-	 * 	@param number
-	 * 				the number added at the end of the filename to differentiate
+	/**
+	 * Generates a single {@link Specifications} and writes it to the file specified by filename
+	 * 	@param number the number used to get an unique filename
 	 */
-	public void GenerateTestcase(int number) {
+	public void generateTestcase(int number) {
 	
 	Specification specification = builder.build();	
 	writer.write(specification, filename+number+".xml");

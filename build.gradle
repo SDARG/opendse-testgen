@@ -43,7 +43,7 @@ def descriptions = [
 ]
 
 allprojects {
-	group = 'bachelorarbeit'
+	group = 'org.opendse.testcasegenerator'
 
 	repositories {
 		mavenCentral()
@@ -125,7 +125,7 @@ ext {
 }
 
 
-mainClassName = 'org.opendse.testcaseGenerator.Generator'
+mainClassName = 'org.opendse.testcasegenerator.Generator'
 
 task fatjar(dependsOn: subprojects.jar, type: Jar) {
 	duplicatesStrategy = DuplicatesStrategy.EXCLUDE

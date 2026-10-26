@@ -95,8 +95,8 @@ public class DefaultMapper extends Mapper{
 		ArrayList<Resource> sensors = new ArrayList<Resource>();
 		for ( Resource resource: resourceList) {
 			if(resource instanceof Cpu) cpus.add(resource);
-			if(resource instanceof Actuator) actuators.add(resource);
-			if(resource instanceof Sensor) sensors.add(resource);
+			else if(resource instanceof Actuator) actuators.add(resource);
+			else if(resource instanceof Sensor) sensors.add(resource);
 		}
 		
 		ArrayList<Task> taskList = new ArrayList<Task>(application.getVertices());
