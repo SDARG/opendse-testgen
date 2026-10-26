@@ -1,13 +1,13 @@
-package org.opendse.testcaseGenerator.architecture;
+package org.opendse.testcasegenerator.architecture;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.opendse.testcaseGenerator.architecture.SubarchitectureBuilder.SubarchitectureType;
-import org.opendse.testcaseGenerator.modelextension.Bus;
-import org.opendse.testcaseGenerator.modelextension.CANBus;
-import org.opendse.testcaseGenerator.modelextension.EthernetBus;
-import org.opendse.testcaseGenerator.modelextension.Gateway;
+import org.opendse.testcasegenerator.architecture.SubarchitectureBuilder.SubarchitectureType;
+import org.opendse.testcasegenerator.modelextension.Bus;
+import org.opendse.testcasegenerator.modelextension.CANBus;
+import org.opendse.testcasegenerator.modelextension.EthernetBus;
+import org.opendse.testcasegenerator.modelextension.Gateway;
 import org.opt4j.core.common.random.Rand;
 import org.opt4j.core.start.Constant;
 

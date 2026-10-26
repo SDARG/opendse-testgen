@@ -1,4 +1,4 @@
-package org.opendse.testcaseGenerator;
+package org.opendse.testcasegenerator;
 
 import org.opt4j.core.config.Task;
 

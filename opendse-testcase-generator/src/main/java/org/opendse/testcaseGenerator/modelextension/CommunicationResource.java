@@ -1,4 +1,4 @@
-package org.opendse.testcaseGenerator.modelextension;
+package org.opendse.testcasegenerator.modelextension;
 
 import org.opt4j.core.common.random.Rand;
 

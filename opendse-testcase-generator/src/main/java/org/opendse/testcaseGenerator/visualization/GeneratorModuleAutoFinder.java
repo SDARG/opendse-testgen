@@ -1,4 +1,4 @@
-package org.opendse.testcaseGenerator.visualization;
+package org.opendse.testcasegenerator.visualization;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
-import org.opendse.testcaseGenerator.modules.GeneratorModule;
+import org.opendse.testcasegenerator.modules.GeneratorModule;
 import org.opt4j.core.common.random.RandomModule;
 import org.opt4j.core.config.ModuleAutoFinder;
 import org.opt4j.core.config.Starter;

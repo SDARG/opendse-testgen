@@ -1,9 +1,9 @@
-package org.opendse.testcaseGenerator.application;
+package org.opendse.testcasegenerator.application;
 
-import org.opendse.testcaseGenerator.architecture.ArchitectureBuilder;
-import org.opendse.testcaseGenerator.modelextension.ActuatorTask;
-import org.opendse.testcaseGenerator.modelextension.CpuTask;
-import org.opendse.testcaseGenerator.modelextension.SensorTask;
+import org.opendse.testcasegenerator.architecture.ArchitectureBuilder;
+import org.opendse.testcasegenerator.modelextension.ActuatorTask;
+import org.opendse.testcasegenerator.modelextension.CpuTask;
+import org.opendse.testcasegenerator.modelextension.SensorTask;
 
 import net.sf.opendse.model.Application;
 import net.sf.opendse.model.Communication;

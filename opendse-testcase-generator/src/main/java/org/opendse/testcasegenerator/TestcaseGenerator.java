@@ -1,6 +1,6 @@
-package org.opendse.testcaseGenerator;
+package org.opendse.testcasegenerator;
 
-import org.opendse.testcaseGenerator.modules.ArchitectureModule.ArchitectureType;
+import org.opendse.testcasegenerator.modules.ArchitectureModule.ArchitectureType;
 import org.opt4j.core.start.Constant;
 
 import com.google.inject.Inject;

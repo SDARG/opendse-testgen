@@ -1,9 +1,9 @@
-package org.opendse.testcaseGenerator.architecture;
+package org.opendse.testcasegenerator.architecture;
 
 import java.util.ArrayList;
 
-import org.opendse.testcaseGenerator.modelextension.CommInterface;
-import org.opendse.testcaseGenerator.modelextension.Cpu;
+import org.opendse.testcasegenerator.modelextension.CommInterface;
+import org.opendse.testcasegenerator.modelextension.Cpu;
 import org.opt4j.core.common.random.Rand;
 
 import net.sf.opendse.model.Architecture;

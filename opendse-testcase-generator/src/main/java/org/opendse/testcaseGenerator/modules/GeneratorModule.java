@@ -1,4 +1,4 @@
-package org.opendse.testcaseGenerator.modules;
+package org.opendse.testcasegenerator.modules;
 
 import org.opt4j.core.config.annotations.Category;
 import org.opt4j.core.start.Opt4JModule;

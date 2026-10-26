@@ -1,8 +1,8 @@
-package org.opendse.testcaseGenerator.modules;
+package org.opendse.testcasegenerator.modules;
 
-import org.opendse.testcaseGenerator.application.ApplicationBuilder;
-import org.opendse.testcaseGenerator.application.MixedCriticalityApplicationBuilder;
-import org.opendse.testcaseGenerator.application.ParallelApplicationBuilder;
+import org.opendse.testcasegenerator.application.ApplicationBuilder;
+import org.opendse.testcasegenerator.application.MixedCriticalityApplicationBuilder;
+import org.opendse.testcasegenerator.application.ParallelApplicationBuilder;
 import org.opt4j.core.config.annotations.Info;
 import org.opt4j.core.config.annotations.Order;
 import org.opt4j.core.config.annotations.Parent;

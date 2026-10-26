@@ -1,4 +1,4 @@
-package org.opendse.testcaseGenerator.application;
+package org.opendse.testcasegenerator.application;
 
 import com.google.inject.ImplementedBy;
 

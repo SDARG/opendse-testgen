@@ -1,4 +1,4 @@
-package org.opendse.testcaseGenerator.modelextension;
+package org.opendse.testcasegenerator.modelextension;
 
 import net.sf.opendse.model.Element;
 import net.sf.opendse.optimization.constraints.SpecificationCapacityConstraints;

@@ -1,9 +1,9 @@
-package org.opendse.testcaseGenerator.architecture;
+package org.opendse.testcasegenerator.architecture;
 
 import java.util.ArrayList;
 
-import org.opendse.testcaseGenerator.architecture.TileBuilder.TileType;
-import org.opendse.testcaseGenerator.modelextension.NoCRouter;
+import org.opendse.testcasegenerator.architecture.TileBuilder.TileType;
+import org.opendse.testcasegenerator.modelextension.NoCRouter;
 import org.opt4j.core.common.random.Rand;
 import org.opt4j.core.start.Constant;
 

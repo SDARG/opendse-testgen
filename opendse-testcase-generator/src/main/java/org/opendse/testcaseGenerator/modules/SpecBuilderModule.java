@@ -1,7 +1,7 @@
-package org.opendse.testcaseGenerator.modules;
+package org.opendse.testcasegenerator.modules;
 
 
-import org.opendse.testcaseGenerator.TestcaseGenerator;
+import org.opendse.testcasegenerator.TestcaseGenerator;
 import org.opt4j.core.config.annotations.File;
 import org.opt4j.core.config.annotations.Info;
 import org.opt4j.core.config.annotations.Order;

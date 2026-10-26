@@ -1,4 +1,4 @@
-package org.opendse.testcaseGenerator.mappings;
+package org.opendse.testcasegenerator.mappings;
 
 import com.google.inject.ImplementedBy;
 import com.google.inject.Inject;

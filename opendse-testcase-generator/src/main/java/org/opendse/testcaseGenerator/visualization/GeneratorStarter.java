@@ -1,6 +1,6 @@
-package org.opendse.testcaseGenerator.visualization;
+package org.opendse.testcasegenerator.visualization;
 
-import org.opendse.testcaseGenerator.GeneratorTask;
+import org.opendse.testcasegenerator.GeneratorTask;
 import org.opt4j.core.config.Starter;
 
 /*

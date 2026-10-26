@@ -1,4 +1,4 @@
-package org.opendse.testcaseGenerator.application;
+package org.opendse.testcasegenerator.application;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.opendse.testcaseGenerator.architecture.ArchitectureBuilder;
-import org.opendse.testcaseGenerator.modelextension.ActuatorTask;
-import org.opendse.testcaseGenerator.modelextension.CpuTask;
-import org.opendse.testcaseGenerator.modelextension.SensorTask;
-import org.opendse.testcaseGenerator.modules.ApplicationModule.NumberOfTasks;
+import org.opendse.testcasegenerator.architecture.ArchitectureBuilder;
+import org.opendse.testcasegenerator.modelextension.ActuatorTask;
+import org.opendse.testcasegenerator.modelextension.CpuTask;
+import org.opendse.testcasegenerator.modelextension.SensorTask;
+import org.opendse.testcasegenerator.modules.ApplicationModule.NumberOfTasks;
 import org.opt4j.core.common.random.Rand;
 import org.opt4j.core.start.Constant;
 

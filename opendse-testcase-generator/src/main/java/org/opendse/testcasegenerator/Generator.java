@@ -1,4 +1,4 @@
-package org.opendse.testcaseGenerator;
+package org.opendse.testcasegenerator;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -10,8 +10,8 @@ import java.awt.SplashScreen;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import org.opendse.testcaseGenerator.modules.SetupModule;
-import org.opendse.testcaseGenerator.visualization.GeneratorStarter;
+import org.opendse.testcasegenerator.modules.SetupModule;
+import org.opendse.testcasegenerator.visualization.GeneratorStarter;
 import org.opt4j.core.config.ModuleAutoFinder;
 import org.opt4j.core.config.ModuleAutoFinderListener;
 import org.opt4j.core.config.visualization.ApplicationFrame;

@@ -1,4 +1,4 @@
-package org.opendse.testcaseGenerator.utils;
+package org.opendse.testcasegenerator.utils;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package org.opendse.testcaseGenerator.architecture;
+package org.opendse.testcasegenerator.architecture;
 
 import net.sf.opendse.model.Architecture;
 import net.sf.opendse.model.Link;

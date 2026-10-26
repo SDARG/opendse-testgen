@@ -1,14 +1,14 @@
-package org.opendse.testcaseGenerator.architecture;
+package org.opendse.testcasegenerator.architecture;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.opendse.testcaseGenerator.modelextension.Actuator;
-import org.opendse.testcaseGenerator.modelextension.Cpu;
-import org.opendse.testcaseGenerator.modelextension.Sensor;
-import org.opendse.testcaseGenerator.modelextension.Switch;
+import org.opendse.testcasegenerator.modelextension.Actuator;
+import org.opendse.testcasegenerator.modelextension.Cpu;
+import org.opendse.testcasegenerator.modelextension.Sensor;
+import org.opendse.testcasegenerator.modelextension.Switch;
 import org.opt4j.core.common.random.Rand;
 import org.opt4j.core.start.Constant;
 

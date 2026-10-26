@@ -1,9 +1,9 @@
-package org.opendse.testcaseGenerator.modules;
+package org.opendse.testcasegenerator.modules;
 
-import org.opendse.testcaseGenerator.visualization.GeneratorApplicationFrame;
-import org.opendse.testcaseGenerator.visualization.GeneratorExecutionEnvironment;
-import org.opendse.testcaseGenerator.visualization.GeneratorModuleRegister;
-import org.opendse.testcaseGenerator.visualization.GeneratorToolBar;
+import org.opendse.testcasegenerator.visualization.GeneratorApplicationFrame;
+import org.opendse.testcasegenerator.visualization.GeneratorExecutionEnvironment;
+import org.opendse.testcasegenerator.visualization.GeneratorModuleRegister;
+import org.opendse.testcasegenerator.visualization.GeneratorToolBar;
 import org.opt4j.core.config.ExecutionEnvironment;
 import org.opt4j.core.config.ModuleRegister;
 import org.opt4j.core.config.visualization.ApplicationFrame;

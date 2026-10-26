@@ -1,8 +1,8 @@
-package org.opendse.testcaseGenerator.modules;
+package org.opendse.testcasegenerator.modules;
 
-import org.opendse.testcaseGenerator.mappings.DefaultMapper;
-import org.opendse.testcaseGenerator.mappings.LimitedMapper;
-import org.opendse.testcaseGenerator.mappings.Mapper;
+import org.opendse.testcasegenerator.mappings.DefaultMapper;
+import org.opendse.testcasegenerator.mappings.LimitedMapper;
+import org.opendse.testcasegenerator.mappings.Mapper;
 import org.opt4j.core.config.annotations.Info;
 import org.opt4j.core.config.annotations.Order;
 import org.opt4j.core.config.annotations.Parent;

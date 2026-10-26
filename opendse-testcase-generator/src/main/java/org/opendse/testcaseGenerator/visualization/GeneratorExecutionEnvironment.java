@@ -1,4 +1,4 @@
-package org.opendse.testcaseGenerator.visualization;
+package org.opendse.testcasegenerator.visualization;
 
 import java.util.ArrayList;
 import java.util.Collection;

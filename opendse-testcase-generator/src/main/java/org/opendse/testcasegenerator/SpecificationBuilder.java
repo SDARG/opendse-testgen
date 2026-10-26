@@ -1,10 +1,10 @@
-package org.opendse.testcaseGenerator;
+package org.opendse.testcasegenerator;
 
-import org.opendse.testcaseGenerator.application.ApplicationBuilder;
-import org.opendse.testcaseGenerator.architecture.ArchitectureBuilder;
-import org.opendse.testcaseGenerator.mappings.Mapper;
-import org.opendse.testcaseGenerator.modelextension.CommunicationResource;
-import org.opendse.testcaseGenerator.modelextension.FunctionalResource;
+import org.opendse.testcasegenerator.application.ApplicationBuilder;
+import org.opendse.testcasegenerator.architecture.ArchitectureBuilder;
+import org.opendse.testcasegenerator.mappings.Mapper;
+import org.opendse.testcasegenerator.modelextension.CommunicationResource;
+import org.opendse.testcasegenerator.modelextension.FunctionalResource;
 import org.opt4j.core.common.random.Rand;
 
 import com.google.inject.Inject;

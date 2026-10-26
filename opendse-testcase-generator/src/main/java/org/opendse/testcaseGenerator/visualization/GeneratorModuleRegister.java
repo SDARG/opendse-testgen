@@ -1,4 +1,4 @@
-package org.opendse.testcaseGenerator.visualization;
+package org.opendse.testcasegenerator.visualization;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;

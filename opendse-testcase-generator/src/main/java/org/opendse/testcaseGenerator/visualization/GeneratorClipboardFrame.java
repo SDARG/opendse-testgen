@@ -1,4 +1,4 @@
-package org.opendse.testcaseGenerator.visualization;
+package org.opendse.testcasegenerator.visualization;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
