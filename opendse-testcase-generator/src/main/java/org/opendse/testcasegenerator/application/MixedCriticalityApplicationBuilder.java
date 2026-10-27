@@ -376,7 +376,7 @@ public class MixedCriticalityApplicationBuilder extends ApplicationBuilder {
 		}
 		
 		//check if function fully connected, if not then add additional edges
-		handleUnconnectedFunction(function);
+		handleUnconnectedFunction(function,addMessages);
 	}
 
 }

@@ -2,7 +2,6 @@ package org.opendse.testcasegenerator.application;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.opendse.testcasegenerator.architecture.ArchitectureBuilder;
 import org.opendse.testcasegenerator.modelextension.ActuatorTask;
@@ -270,6 +269,7 @@ public class ParallelApplicationBuilder extends ApplicationBuilder {
 			}
 		}
 		
+		
 		/*
 		 * Prevents unwanted open ends by connecting remaining tasks
 		 */
@@ -283,6 +283,7 @@ public class ParallelApplicationBuilder extends ApplicationBuilder {
 			function.addEdge(new Dependency("d"+usedependencyCounter()), task, t );
 		}
 		
+		
 		for(Task task : tempOpenInput) {
 			if(tempOpenOutput.size() > 0) {
 				function.addEdge(new Dependency("d"+usedependencyCounter()), tempOpenOutput.get(rand.nextInt(tempOpenOutput.size())), task);
@@ -292,7 +293,7 @@ public class ParallelApplicationBuilder extends ApplicationBuilder {
 		}
 		
 		//check if function fully connected, if not then add additional edges
-		handleUnconnectedFunction(function);
+		handleUnconnectedFunction(function,addMessages);
 	}
 
 }

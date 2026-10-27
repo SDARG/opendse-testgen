@@ -128,7 +128,7 @@ public abstract class ApplicationBuilder {
 	/*
 	 * handles the case when the tasks in a function are not fully connected as this would results in several parallel functions instead of one
 	 */
-	protected void handleUnconnectedFunction(Function<Task, Dependency> function) {
+	protected void handleUnconnectedFunction(Function<Task, Dependency> function, boolean addMessages) {
 		Map<Integer, List<Task>> connectionsMap = checkForConnectedFunction(function);
 		if(connectionsMap != null) {
 			//connect one task from list i to one task from list i+1 for all i
@@ -157,11 +157,18 @@ public abstract class ApplicationBuilder {
 						index++;
 					}
 				}
-				//connect source and destination via a new message
-				Task comm  = new Communication("c"+usecommCounter());
-				function.addVertex(comm);
-				function.addEdge(new Dependency("d"+usedependencyCounter()), source, comm);
-				function.addEdge(new Dependency("d"+usedependencyCounter()), comm, destination);
+				if(addMessages) {
+					//connect source and destination via a new message
+					Task comm  = new Communication("c"+usecommCounter());
+					function.addVertex(comm);
+					function.addEdge(new Dependency("d"+usedependencyCounter()), source, comm);
+					function.addEdge(new Dependency("d"+usedependencyCounter()), comm, destination);
+				}
+				else {
+					//connect source and destination directly
+					function.addEdge(new Dependency("d"+usedependencyCounter()), source, destination);
+				}
+				
 			}
 		}
 	}
