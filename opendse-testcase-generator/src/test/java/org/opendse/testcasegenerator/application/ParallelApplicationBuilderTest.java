@@ -3,10 +3,7 @@ package org.opendse.testcasegenerator.application;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +15,6 @@ import org.opt4j.core.common.random.RandomMersenneTwister;
 import net.sf.opendse.model.Application;
 import net.sf.opendse.model.Communication;
 import net.sf.opendse.model.Dependency;
-import net.sf.opendse.model.Edge;
 import net.sf.opendse.model.Function;
 import net.sf.opendse.model.Task;
 
