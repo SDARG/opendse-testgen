@@ -1,7 +1,7 @@
 [![OpenDSE-TestGen Build & Test](https://github.com/SDARG/opendse-testgen/actions/workflows/gradle.yml/badge.svg)](https://github.com/SDARG/opendse-testgen/actions/workflows/gradle.yml)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/ef6dc436d8844aa7be33bf8ba51cf37c)](https://app.codacy.com/gh/SDARG/opendse-testgen/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/fd2e81e87d924e2baf0331dea12b7d17)](https://app.codacy.com/gh/SDARG/opendse-testgen/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
-[![](https://jitpack.io/v/sdarg/opendse-testgen.svg)](https://jitpack.io/#sdarg/opendse-testgen)
+[![Jitpack badge](https://jitpack.io/v/sdarg/opendse-testgen.svg)](https://jitpack.io/#sdarg/opendse-testgen)
 
 # OpenDSE-TestGen
 
