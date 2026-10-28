@@ -91,10 +91,8 @@ public class MixedCriticalityApplicationBuilderTest {
 	private boolean isCriticalFunction(Function<Task, Dependency> function) {
 		for(Task task : function.getVertices()) {
 			if(!(task instanceof Communication)) {
-				if(task.getAttribute("safetyCritical") != null) {
-					if((boolean)task.getAttribute("safetyCritical") == false) {
-						return false;
-					}
+				if(task.getAttribute("safetyCritical") != null && !(boolean)task.getAttribute("safetyCritical")) {
+					return false;
 				}
 			}
 		}
