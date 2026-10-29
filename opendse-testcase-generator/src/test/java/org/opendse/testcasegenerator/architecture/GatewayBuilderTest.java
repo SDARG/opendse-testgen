@@ -129,10 +129,7 @@ public class GatewayBuilderTest {
 			}
 		}
 		//should only be connected to gateway once
-		if(connectionsToGateway == 1) {
-			return true;
-		}
-		return false;
+		return connectionsToGateway == 1;
 	}
 	
 	/*
@@ -146,10 +143,7 @@ public class GatewayBuilderTest {
 			}
 		}
 		//should be more than 0 and at most 2 subarchitectures connected to each bus
-		if(connectionsToSubarchitectures > 0 && connectionsToSubarchitectures <= 2) {
-			return true;
-		}
-		return false;
+		return (connectionsToSubarchitectures > 0) && (connectionsToSubarchitectures <= 2);
 	}
 	
 }
