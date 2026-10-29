@@ -102,6 +102,7 @@ public class GatewayBuilder  extends ArchitectureBuilder{
 		builder.setBus(buslist);
 		for(int i = 0; i <= rand.nextInt(resourceNumber);i++) {
 			switch(rand.nextInt(SubarchitectureType.values().length+1)) {
+			//two cases build cpu to make it more likely than the others
 			case 0:
 				builder.setType(SubarchitectureType.CPU);
 				break;
