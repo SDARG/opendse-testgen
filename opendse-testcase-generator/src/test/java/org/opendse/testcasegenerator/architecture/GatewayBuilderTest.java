@@ -62,8 +62,8 @@ public class GatewayBuilderTest {
 		//check all buses connected to gateway and correct number of subarchitectures
 		for(Bus bus : buses) {
 			Collection<Link> links = architecture.getIncidentEdges(bus);
-			assertTrue(busConnectedToGateway(links, gateway, architecture));
-			assertTrue(busCOnnectedToCorrectNumberOfSubarchitectures(links, gateway, architecture));
+			assertTrue(busConnectedToGateway(links, gateway, architecture),"each bus should be connected to gateway");
+			assertTrue(busConnectedToCorrectNumberOfSubarchitectures(links, gateway, architecture),"each bus should be connected to correct number of subarchitectures");
 		}
 	}
 	
@@ -77,7 +77,7 @@ public class GatewayBuilderTest {
 		Set<Resource> subarchitectureConnections = getAllSubarchitectureConnections(multibusArchitecture);
 		//check for each subarch connection that is has 3 bus neighbors in graph
 		for(Resource resource : subarchitectureConnections) {
-			assertEquals(3, busesInCollection(multibusArchitecture.getNeighbors(resource)));
+			assertEquals(3, busesInCollection(multibusArchitecture.getNeighbors(resource)),"with multibus each subarchitecture should be connected to 3 buses");
 		}
 	}
 	
@@ -135,7 +135,7 @@ public class GatewayBuilderTest {
 	/*
 	 * checks correct number of subarchitctures connected to a bus
 	 */
-	private boolean busCOnnectedToCorrectNumberOfSubarchitectures(Collection<Link> links, Gateway gateway, Architecture<Resource, Link> architecture) {
+	private boolean busConnectedToCorrectNumberOfSubarchitectures(Collection<Link> links, Gateway gateway, Architecture<Resource, Link> architecture) {
 		int connectionsToSubarchitectures = 0;
 		for(Link link : links) {
 			if(!architecture.getEndpoints(link).contains(gateway)) {

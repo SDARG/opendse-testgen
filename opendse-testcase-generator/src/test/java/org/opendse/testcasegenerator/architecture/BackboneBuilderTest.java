@@ -36,7 +36,7 @@ public class BackboneBuilderTest {
 	 * also checks that all switches are fully connected and each resource only connected to one switch
 	 */
 	@Test
-	void testArchitectureWithoutMulitCOnnectionsCorrect() {
+	void testArchitectureWithoutMulitConnectionsCorrect() {
 		Architecture<Resource, Link> architecture = builder.build();
 		int switchNumber = 0;
 		int resourceNumber = 0;
@@ -53,18 +53,18 @@ public class BackboneBuilderTest {
 			}
 		}
 		//check that number of components correct
-		assertEquals(3, switchNumber);
-		assertEquals(10, resourceNumber);
+		assertEquals(3, switchNumber,"there should be 3 switches");
+		assertEquals(10, resourceNumber,"there should be 10 resources");
 		
 		//check structure of architecture correct
 		for(Switch sw : switches) {
-			assertTrue(connectedToAllSwitches(sw, switches, architecture));
+			assertTrue(connectedToAllSwitches(sw, switches, architecture),"switches should be fully connected");
 		}
 		
 		//check each resource only connected to one switch
 		for(Resource r : resources) {
 			//just count neighbors since resources not connected to each other, only to switches
-			assertEquals(1, architecture.getNeighborCount(r));
+			assertEquals(1, architecture.getNeighborCount(r),"each resource should only be connected to 1 switch");
 		}
 	}
 	
@@ -73,7 +73,7 @@ public class BackboneBuilderTest {
 	 * also checks that all switches are fully connected and number of connections per resource is in defined limits
 	 */
 	@Test
-	void testArchitectureWithMulitCOnnectionsCorrect() {
+	void testArchitectureWithMulitConnectionsCorrect() {
 		BackboneBuilder multiConnectionBuilder = new BackboneBuilder(3, 10, true, 2, rand);
 		Architecture<Resource, Link> multiConnectionArchitecture = multiConnectionBuilder.build();
 		int switchNumber = 0;
@@ -91,19 +91,19 @@ public class BackboneBuilderTest {
 			}
 		}
 		//check that number of components correct
-		assertEquals(3, switchNumber);
-		assertEquals(10, resourceNumber);
+		assertEquals(3, switchNumber,"there should be 3 switches");
+		assertEquals(10, resourceNumber,"there should be 10 resources");
 		
 		//check structure of architecture correct
 		for(Switch sw : switches) {
-			assertTrue(connectedToAllSwitches(sw, switches, multiConnectionArchitecture));
+			assertTrue(connectedToAllSwitches(sw, switches, multiConnectionArchitecture),"switches should be fully connected");
 		}
 		
 		//check each resource only connected to one switch
 		for(Resource r : resources) {
 			//just count neighbors since resources not connected to each other, only to switches
 			int numberOfConnections = multiConnectionArchitecture.getNeighborCount(r);
-			assertTrue((numberOfConnections > 0) && (numberOfConnections <= 2));
+			assertTrue((numberOfConnections > 0) && (numberOfConnections <= 2),"each resource should only be connected to 1 switch");
 		}
 	}
 	
@@ -118,14 +118,6 @@ public class BackboneBuilderTest {
 		//just check if both sets are equal, then given switch is connected to all switches
 		return neighbors.equals(switches);
 	}
-	
-	/*
-	 * test structure correct
-	 * 	-> all switches connected to each other
-	 * 	-> each resource only connected to one switch
-	 *  -> if multi connections allowed check their limit e.g. 2 with 3 switches
-	 */
-	
 	
 	
 }
