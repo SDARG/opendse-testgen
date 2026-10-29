@@ -74,7 +74,7 @@ public class ArchitectureModule extends GeneratorModule{
 	
 	@Required(property = "multipleConnectionsAllowed", elements = { "true" })
 	@Order(8)
-	@Info("COnnections to how many switches are allowed.")
+	@Info("Connections to how many switches are allowed.")
 	@Constant(value = "numberOfConnections", namespace = BackboneBuilder.class)
 	public int numberOfConnections = 2;
 	

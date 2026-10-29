@@ -42,7 +42,12 @@ public class BackboneBuilder extends ArchitectureBuilder{
 		this.switchNumber = switchNumber;
 		this.resourceNumber = resourceNumber;
 		this.multipleConnectionsAllowed=multipleConnectionsAllowed;
-		this.numberOfConnections=numberOfConnections;
+		if(numberOfConnections < 1) {
+			this.numberOfConnections = 1;
+		}
+		else {
+			this.numberOfConnections=numberOfConnections;
+		}
 		this.rand = rand;
 	}
 	
