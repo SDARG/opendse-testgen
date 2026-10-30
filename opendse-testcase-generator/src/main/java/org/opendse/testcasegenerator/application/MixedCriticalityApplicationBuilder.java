@@ -154,34 +154,8 @@ public class MixedCriticalityApplicationBuilder extends ApplicationBuilder {
 			//connect start tasks to intermediate tasks
 			connectIntermediateTasks(function, openInputs, openOutputs);
 			
-			/*
-			 * Creates #endTasks Tasks to end the application.
-			 * generates actuator tasks if the architecture has actuators.
-			 */
-			for (int i = 0; i < endTasks;i++) {
-				if(ArchitectureBuilder.getActuatorCounter() > 0 && i < actuatorTasksPerFunction) {
-					Task aT = new ActuatorTask("t"+usetaskCounter());
-					if(safetyCritical) {
-						aT.setAttribute("safetyCritical", true);
-					}
-					else {
-						aT.setAttribute("safetyCritical", false);
-					}
-					function.addVertex(aT);
-					openInputs.add(aT);
-				}
-				else {
-					Task cT = new CpuTask("t"+usetaskCounter());
-					if(safetyCritical) {
-						cT.setAttribute("safetyCritical", true);
-					}
-					else {
-						cT.setAttribute("safetyCritical", false);
-					}
-					openInputs.add(cT);
-					function.addVertex(cT);
-				}
-			}
+			//generate the end tasks
+			generateEndTasks(safetyCritical, actuatorTasksPerFunction, function, openInputs);
 			
 			//connect intermediate tasks without outgoing edges to end tasks
 			connectEndTasks(function, openInputs, openOutputs);
@@ -190,6 +164,40 @@ public class MixedCriticalityApplicationBuilder extends ApplicationBuilder {
 			application.add(function);
 		}
 		return application;
+	}
+	
+	/*
+	 * generates the end tasks for the application
+	 */
+	private void generateEndTasks(boolean safetyCritical, int actuatorTasksPerFunction, Function<Task, Dependency> function, List<Task> openInputs) {
+		/*
+		 * Creates #endTasks Tasks to end the application.
+		 * generates actuator tasks if the architecture has actuators.
+		 */
+		for (int i = 0; i < endTasks;i++) {
+			if(ArchitectureBuilder.getActuatorCounter() > 0 && i < actuatorTasksPerFunction) {
+				Task aT = new ActuatorTask("t"+usetaskCounter());
+				if(safetyCritical) {
+					aT.setAttribute("safetyCritical", true);
+				}
+				else {
+					aT.setAttribute("safetyCritical", false);
+				}
+				function.addVertex(aT);
+				openInputs.add(aT);
+			}
+			else {
+				Task cT = new CpuTask("t"+usetaskCounter());
+				if(safetyCritical) {
+					cT.setAttribute("safetyCritical", true);
+				}
+				else {
+					cT.setAttribute("safetyCritical", false);
+				}
+				openInputs.add(cT);
+				function.addVertex(cT);
+			}
+		}
 	}
 	
 	/*
