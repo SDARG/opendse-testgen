@@ -13,6 +13,7 @@ import net.sf.opendse.model.Task;
 
 /**
  * Version of ApplicationBuilder that builds a small 5 Task Application with Messages
+ * just for debugging, not for generating useful specifications
  */
 public class StaticApplicationBuilder extends ApplicationBuilder{
 
