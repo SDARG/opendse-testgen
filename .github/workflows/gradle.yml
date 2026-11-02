@@ -8,6 +8,8 @@ on:
   pull_request:
     branches: [ "main" ]
 
+permissions: 
+  contents: read
 jobs:
   build:
 
@@ -26,3 +28,13 @@ jobs:
       run: ./gradlew build
     - name: Generate the test report
       run: ./gradlew jacocorootreport
+    - name: Run codacy-coverage-reporter
+      uses: codacy/codacy-coverage-reporter-action@v1.3.0
+      with:
+        project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+        coverage-reports: ./build/reports/jacoco/rootReport.xml
+    - name: Run codacy-analysis-cli
+      uses: codacy/codacy-analysis-cli-action@v4.4.7
+      with:
+        project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+        max-allowed-issues: 400

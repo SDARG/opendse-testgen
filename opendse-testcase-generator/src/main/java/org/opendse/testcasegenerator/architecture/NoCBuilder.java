@@ -1,0 +1,127 @@
+package org.opendse.testcasegenerator.architecture;
+
+import java.util.ArrayList;
+
+import org.opendse.testcasegenerator.architecture.TileBuilder.TileType;
+import org.opendse.testcasegenerator.modelextension.NoCRouter;
+import org.opt4j.core.common.random.Rand;
+import org.opt4j.core.start.Constant;
+
+import com.google.inject.Inject;
+
+import net.sf.opendse.model.Architecture;
+import net.sf.opendse.model.Link;
+import net.sf.opendse.model.Resource;
+
+/*
+ * The NoCBuilder is used to create a ordered grid of NoCRouters
+ */
+public class NoCBuilder extends ArchitectureBuilder{
+
+	protected final int xsize;
+	protected final int ysize;
+	protected final Rand rand;
+	
+	@Inject
+	public NoCBuilder(
+			@Constant(value = "xsize", namespace = NoCBuilder.class) int xsize,
+			@Constant(value = "ysize", namespace = NoCBuilder.class) int ysize,
+			Rand rand) {
+		if(xsize < 2) {
+			this.xsize = 2;
+		}
+		else {
+			this.xsize = xsize;
+		}
+		if(ysize < 2) {
+			this.ysize = 2;
+		}
+		else {
+			this.ysize = ysize;
+		}
+		this.rand = rand;
+	}
+	
+	
+	
+	/*
+	 * Builds the NoCRouter Structure with sizes according to xsize and ysize
+	 */
+@Override
+	public Architecture<Resource, Link> build() {
+		/*
+		 * reset counters for the architecture
+		 */
+		ArchitectureBuilder.resetCounters();
+		this.architecture = new Architecture<Resource, Link>();		
+		ArrayList<Resource> resourceList = new ArrayList<Resource>();
+		ArrayList<Link> linkList = new ArrayList<Link>();
+		NoCRouter temp;
+		int linkCount = ysize*(xsize-1) + (ysize-1)*xsize;
+		
+		/**
+		 * generates all resources as specified by parameters
+		 */
+		for(int i = 1; i<= ysize; i++)
+		{
+			for(int j = 1; j<= xsize;j++ )
+			{
+				temp = new NoCRouter("NoC-"+j+"-"+i,j,i);
+				temp.setAttributes();
+				resourceList.add(temp);
+				
+			}
+		}
+		/**
+		 * adds all generated resources to the architecture
+		 */
+		for(Resource NoC : resourceList) {
+			architecture.addVertex(NoC);
+		}
+		/**
+		 * generates number of Links required to connect the grid
+		 */
+		for(int i = 1; i <= linkCount;i++) {
+			linkList.add(new Link("l"+i));
+		}
+		/**
+		 * adds all edges to the architecture
+		 */
+		int linkCounter = 0;
+		for(int i = 0; i< ysize; i++)
+		{
+			for(int j = 0; j< xsize-1;j++ )
+			{
+				architecture.addEdge(linkList.get(linkCounter), resourceList.get(j+(i*xsize)), resourceList.get(j+(i*xsize)+1));		
+				linkCounter++;
+			}
+		}
+		for(int i = 0; i< ysize-1; i++)
+		{
+			for(int j = 0; j< xsize;j++ )
+			{
+				architecture.addEdge(linkList.get(linkCounter), resourceList.get(j+(i*xsize)), resourceList.get(j+((i+1)*xsize)));		
+				linkCounter++;
+			}
+		}
+		fillTiles();
+		return architecture;
+	}
+	/*
+	 * Uses a TileBuilder to attach a substructure with FunctionalResources to each NoCRouter
+	 */
+	public void fillTiles() {
+		ArrayList<Resource> resourceList= new ArrayList<Resource>(architecture.getVertices());
+		TileBuilder builder = new TileBuilder(TileType.CORE,architecture,resourceList.get(0),rand);
+		for(Resource NoC : resourceList) {
+			
+			
+			builder.setConnector(NoC);
+			builder.build();
+			
+			
+		}
+				
+	}
+
+}
